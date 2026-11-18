@@ -31,9 +31,10 @@
 </head>
 <body oncontextmenu="return false;">
 
-  <!-- Top App Header -->
+  <!-- Top App Header (NO ADMIN BUTTON VISIBLE TO CUSTOMERS) -->
   <header class="sticky top-0 z-40 glass px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-2.5">
+    <!-- Secret Admin Trigger: Tap Logo/Brand Name 5 times quickly -->
+    <div onclick="secretOwnerTap()" class="flex items-center gap-2.5 cursor-pointer">
       <div class="w-10 h-10 rounded-xl gradient-btn flex items-center justify-center font-extrabold text-white text-lg shadow-lg">
         <i class="fa-solid fa-graduation-cap"></i>
       </div>
@@ -46,11 +47,8 @@
     </div>
 
     <div class="flex items-center gap-2">
-      <button onclick="scrollToApkSection()" class="bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 hover:bg-emerald-600/30">
-        <i class="fa-brands fa-android text-sm"></i> <span class="hidden sm:inline">Download</span> APK
-      </button>
-      <button onclick="openAdminModal()" class="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 hover:bg-amber-500/30">
-        <i class="fa-solid fa-sliders"></i> Admin
+      <button onclick="scrollToApkSection()" class="bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-emerald-600/30">
+        <i class="fa-brands fa-android text-sm"></i> <span>Download App</span>
       </button>
     </div>
   </header>
@@ -76,7 +74,7 @@
     <!-- Hero Banner -->
     <section id="sec-home" class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/40 border border-slate-800 p-5 sm:p-8 shadow-xl">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold mb-3">
-        <i class="fa-solid fa-bolt"></i> <span id="heroBadge">100% सुरक्षित UPI पेमेंट • तुरंत WhatsApp एक्सेस</span>
+        <i class="fa-solid fa-bolt"></i> <span>100% सुरक्षित UPI पेमेंट • तुरंत WhatsApp एक्सेस</span>
       </div>
       <h2 id="heroTitle" class="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
         प्रीमियम वीडियो कोर्सेज और ई-बुक्स अब एक ही ऐप में
@@ -86,10 +84,10 @@
       </p>
       <div class="flex flex-wrap gap-3 mt-5">
         <button onclick="switchTab('courses')" class="gradient-btn text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-lg flex items-center gap-2">
-          <i class="fa-solid fa-cart-shopping"></i> <span id="btnExplore">कोर्सेज देखें</span>
+          <i class="fa-solid fa-cart-shopping"></i> <span>कोर्सेज देखें</span>
         </button>
         <button onclick="switchTab('library')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm px-5 py-2.5 rounded-xl border border-slate-700 flex items-center gap-2">
-          <i class="fa-solid fa-user-lock text-amber-400"></i> <span id="btnMyAccess">मेरा कोर्स / लॉगिन</span>
+          <i class="fa-solid fa-user-lock text-amber-400"></i> <span>मेरा कोर्स / लॉगिन</span>
         </button>
       </div>
     </section>
@@ -122,9 +120,9 @@
     <section id="sec-library" class="space-y-6">
       <div class="rounded-2xl bg-slate-900 border border-slate-800 p-5 sm:p-6">
         <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
-          <i class="fa-solid fa-key text-amber-400"></i> स्टूडेंट लॉगिन और माय लाइब्रेरी (1-Year / Lifetime Access)
+          <i class="fa-solid fa-key text-amber-400"></i> स्टूडेंट लॉगिन और माय लाइब्रेरी (1-Year Auto-Lock System)
         </h3>
-        <p class="text-xs text-slate-400 mt-1">अपना रजिस्टर्ड मोबाइल नंबर और ईमेल डालकर अपने खरीदे हुए कोर्सेज और टास्क खोलें।</p>
+        <p class="text-xs text-slate-400 mt-1">अपना रजिस्टर्ड मोबाइल नंबर और ईमेल डालकर अपने खरीदे हुए कोर्सेज खोलें। (1 साल पूरा होने पर कोर्स ऑटोमैटिक क्लोज हो जाएगा)</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
           <input id="stuMobile" type="tel" placeholder="मोबाइल नंबर (10 अंक)" class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500" />
@@ -137,7 +135,7 @@
         <div id="studentVault" class="mt-5 hidden space-y-4"></div>
       </div>
 
-      <!-- Dedicated Download APK Banner at the end of Courses / Student Login -->
+      <!-- Dedicated Download APK Banner -->
       <div id="apkDownloadSection" class="rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-emerald-950/60 border border-emerald-500/40 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
         <div class="space-y-1.5">
           <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
@@ -160,10 +158,10 @@
         <i class="fa-solid fa-scale-balanced"></i> कानूनी सूचना, कॉपीराइट और नियम व शर्तें (Indian Cyber & Copyright Law)
       </div>
       <p>
-        <strong>1. सर्वाधिकार सुरक्षित (All Rights Reserved - Copyright Act, 1957):</strong> इस वेबसाइट और ऐप पर उपलब्ध सभी वीडियो कोर्सेज, ई-बुक्स, पीडीएफ और डिजिटल सामग्री पूरी तरह से <span id="legalBrandName" class="text-white font-semibold">सीखो डिजिटल</span> की निजी बौद्धिक संपदा हैं। किसी भी ग्राहक को केवल व्यक्तिगत सीखने के लिए 1 वर्ष (365 दिन) या निर्धारित अवधि का सीमित एक्सेस दिया जाता है, री-सेल या कॉपीराइट का अधिकार नहीं।
+        <strong>1. सर्वाधिकार सुरक्षित (All Rights Reserved - Copyright Act, 1957):</strong> इस वेबसाइट और ऐप पर उपलब्ध सभी वीडियो कोर्सेज, ई-बुक्स, पीडीएफ और डिजिटल सामग्री पूरी तरह से <span id="legalBrandName" class="text-white font-semibold">सीखो डिजिटल</span> की निजी बौद्धिक संपदा हैं। किसी भी ग्राहक को केवल व्यक्तिगत सीखने के लिए 1 वर्ष (365 दिन) का सीमित एक्सेस दिया जाता है, री-सेल या कॉपीराइट का अधिकार नहीं।
       </p>
       <p>
-        <strong>2. एंटी-पायरेसी चेतावनी (IT Act, 2000 & BNS):</strong> कोर्स का स्क्रीनशॉट लेना, स्क्रीन रिकॉर्डिंग करना, लिंक शेयर करना या किसी अन्य टेलीग्राम/व्हाट्सएप ग्रुप में बेचना गैर-कानूनी है। ऐसा पकड़े जाने पर बिना रिफंड के तुरंत एक्सेस ब्लॉक कर दिया जाएगा और भारतीय कॉपीराइट अधिनियम 1957 की धारा 63 एवं आईटी एक्ट 2000 की धारा 66 के तहत कानूनी कार्रवाई व जुर्माना किया जाएगा।
+        <strong>2. एंटी-पायरेसी चेतावनी (IT Act, 2000 & BNS):</strong> कोर्स का स्क्रीनशॉट लेना, स्क्रीन रिकॉर्डिंग करना, लिंक शेयर करना या किसी अन्य टेलीग्राम/व्हाट्सएप ग्रुप में बेचना गैर-कानूनी है। ऐसा पकड़े जाने पर बिना रिफंड के तुरंत एक्सेस ब्लॉक कर दिया जाएगा और भारतीय कॉपीराइट अधिनियम 1957 की धारा 63 एवं आईटी एक्ट 2000 की धारा 66 के तहत कानूनी कार्रवाई की जाएगी।
       </p>
       <p>
         <strong>3. सुरक्षित पेमेंट और डेटा सुरक्षा (DPDP Act, 2023):</strong> सभी भुगतान सीधे सरकारी UPI नेटवर्क के माध्यम से होते हैं। हम किसी भी ग्राहक का बैंक पासवर्ड, कार्ड नंबर या गुप्त पिन स्टोर नहीं करते हैं।
@@ -202,7 +200,7 @@
         <div id="chkTotalAmount" class="text-2xl font-extrabold text-emerald-400">₹499</div>
         <img id="upiQrImg" src="" alt="UPI QR Code" class="w-40 h-40 mx-auto rounded-xl bg-white p-2 border border-slate-700" />
         <div class="text-xs text-slate-300">
-          UPI ID: <strong id="displayUpiId" class="text-amber-300 select-all">seekhodigital@ybl</strong>
+          Verified Merchant UPI: <strong id="displayUpiId" class="text-amber-300 select-all">seekhodigital@ybl</strong>
         </div>
         <a id="upiIntentBtn" href="#" class="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs">
           <i class="fa-solid fa-mobile-screen-button"></i> GPay / PhonePe / Paytm ऐप से पेमेंट करें
@@ -223,7 +221,7 @@
     </div>
   </div>
 
-  <!-- Instant Redirect Page Modal (WhatsApp Group Link Only) -->
+  <!-- Instant Redirect Page Modal -->
   <div id="redirectModal" class="fixed inset-0 z-50 bg-slate-950/95 hidden items-center justify-center p-4">
     <div class="bg-slate-900 border border-emerald-500/40 rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
       <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-3xl mx-auto">
@@ -231,7 +229,7 @@
       </div>
       <h3 class="text-xl font-extrabold text-white">पेमेंट डिटेल दर्ज हो गई है!</h3>
       <p class="text-xs text-slate-300">
-        आपका 1 साल (365 दिन) का कोर्स रिकॉर्ड सुरक्षित रूप से हमारे सिस्टम में जुड़ गया है। नीचे दिए गए बटन पर क्लिक करके तुरंत अपने कोर्स के **Official WhatsApp Group** में जुड़ें:
+        आपका 1 साल (365 दिन) का कोर्स रिकॉर्ड जुड़ गया है। नीचे दिए गए बटन पर क्लिक करके तुरंत अपने कोर्स के **Official WhatsApp Group** में जुड़ें:
       </p>
       <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-left space-y-1">
         <div><strong>कोर्स:</strong> <span id="redCourseName" class="text-amber-300"></span></div>
@@ -247,20 +245,58 @@
     </div>
   </div>
 
-  <!-- Admin Control Panel Modal (PIN: 1234) -->
-  <div id="adminModal" class="fixed inset-0 z-50 bg-black/85 hidden items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-5 space-y-5 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="text-base sm:text-lg font-extrabold text-amber-400 flex items-center gap-2">
-          <i class="fa-solid fa-user-shield"></i> एडमिन कंट्रोल पैनल (Full Control)
+  <!-- Secret Owner Gmail Verification Modal (Hidden from Customers) -->
+  <div id="ownerAuthModal" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+        <h3 class="text-sm font-extrabold text-amber-400 flex items-center gap-2">
+          <i class="fa-solid fa-lock"></i> Owner Gmail Verification
         </h3>
+        <button onclick="closeOwnerAuth()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <p class="text-[11px] text-slate-400">
+        यह पैनल ग्राहकों के लिए लॉक है। केवल वेबसाइट के मालिक अपनी रजिस्टर्ड Gmail ID और मास्टर पासवर्ड से इसे खोल सकते हैं।
+      </p>
+      <div class="space-y-2.5">
+        <input id="authGmailInput" type="email" placeholder="अपनी Owner Gmail ID डालें *" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white" />
+        <input id="authPassInput" type="password" placeholder="Owner Master Password डालें *" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white" />
+      </div>
+      <button onclick="verifyOwnerCredentials()" class="w-full gradient-btn text-white font-extrabold text-xs py-3 rounded-xl shadow">
+        Verify & Unlock Owner Panel
+      </button>
+    </div>
+  </div>
+
+  <!-- Hidden Owner Admin Control Panel Modal -->
+  <div id="adminModal" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-5 space-y-5 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base sm:text-lg font-extrabold text-amber-400 flex items-center gap-2">
+            <i class="fa-solid fa-user-shield"></i> प्राइवेट ओनर कंट्रोल पैनल (Customers से छुपा हुआ)
+          </h3>
+          <p class="text-[11px] text-slate-400">यहाँ बदलाव करने के बाद नीचे हरे बटन से नई <code class="text-emerald-400">index.html</code> डाउनलोड करके GitHub में अपलोड करें ताकि बदलाव सबके फोन में परमानेंट लॉक हो जाएं।</p>
+        </div>
         <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- Brand, UPI & APK Link Settings -->
+      <!-- Permanent Master Publish Button -->
+      <div class="bg-emerald-950/60 border border-emerald-500/40 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="text-xs space-y-0.5">
+          <div class="font-extrabold text-emerald-300">ग्राहकों के लिए परमानेंट लॉक के साथ पब्लिश करें</div>
+          <div class="text-slate-300">आपने जो कोर्सेज, UPI ID और Owner Gmail सेट किया है, उसे कोड में लॉक करके नई फाइल डाउनलोड करें:</div>
+        </div>
+        <button onclick="downloadLockedHtmlFile()" class="shrink-0 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-1.5">
+          <i class="fa-solid fa-download"></i> अपडेटेड index.html डाउनलोड करें
+        </button>
+      </div>
+
+      <!-- Brand, Owner Gmail, UPI & APK Link Settings -->
       <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
-        <h4 class="text-xs font-bold text-amber-300 uppercase">1. कंपनी का नाम, UPI ID और APK लिंक सेटिंग्स</h4>
+        <h4 class="text-xs font-bold text-amber-300 uppercase">1. आपकी Owner Gmail, कंपनी का नाम, UPI ID और APK लिंक</h4>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input id="admOwnerGmail" type="email" placeholder="आपकी Owner Gmail ID (सिर्फ इसी से पैनल खुलेगा)" class="bg-slate-900 border border-amber-500/50 rounded-xl px-3 py-2 text-xs text-white" />
+          <input id="admOwnerPass" type="text" placeholder="आपका नया Master Password" class="bg-slate-900 border border-amber-500/50 rounded-xl px-3 py-2 text-xs text-white" />
           <input id="admBrandName" type="text" placeholder="कंपनी / ऐप का नाम" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
           <input id="admUpiId" type="text" placeholder="आपकी UPI ID (जैसे name@ybl)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
           <input id="admWhatsapp" type="text" placeholder="आपका WhatsApp नंबर (919999999999)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
@@ -271,7 +307,7 @@
         </button>
       </div>
 
-      <!-- Add New Course or E-Book -->
+      <!-- Add / Delete Courses -->
       <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
         <div class="flex items-center justify-between">
           <h4 class="text-xs font-bold text-emerald-400 uppercase">2. नया कोर्स या ई-बुक जोड़ें</h4>
@@ -283,7 +319,7 @@
           <input id="newTitle" type="text" placeholder="कोर्स / ई-बुक का नाम *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
           <input id="newPrice" type="number" placeholder="कीमत (₹) जैसे 499 *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
           <input id="newBadge" type="text" placeholder="ऑफर बैज (जैसे 70% OFF / Bestseller)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="newValidity" type="text" placeholder="वैलिडिटी (जैसे 1 Year / Lifetime)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
+          <input id="newValidity" type="text" placeholder="वैलिडिटी (जैसे 1 Year Access)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
           <input id="newWaGroup" type="url" placeholder="उस कोर्स का WhatsApp Group Link *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
           <input id="newDriveLink" type="url" placeholder="कोर्स वीडियो / ई-बुक एक्सेस लिंक *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
         </div>
@@ -291,6 +327,9 @@
         <button onclick="addNewCourse()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl">
           + कोर्स लिस्ट में जोड़ें
         </button>
+
+        <!-- Existing Courses Delete List -->
+        <div id="adminCourseList" class="pt-3 border-t border-slate-800 space-y-2"></div>
       </div>
 
       <!-- Orders Excel Export & 1-Year Lock Control -->
@@ -306,7 +345,7 @@
     </div>
   </div>
 
-  <!-- Bottom Mobile App Navigation Bar -->
+  <!-- Bottom Mobile App Navigation Bar (Only Customer Tabs) -->
   <nav class="fixed bottom-0 inset-x-0 z-40 glass border-t border-slate-800 px-2 py-2 flex items-center justify-around">
     <button onclick="switchTab('home')" class="flex flex-col items-center text-amber-400 text-[11px] font-bold">
       <i class="fa-solid fa-house text-base"></i><span>Home</span>
@@ -326,15 +365,17 @@
   </nav>
 
   <script>
-    // Default Settings & Sample Courses
-    let settings = JSON.parse(localStorage.getItem('sd_settings')) || {
+    /*__LOCKED_CONFIG_START__*/
+    const DEFAULT_SETTINGS = {
+      ownerGmail: 'owner@gmail.com',
+      ownerPass: 'Krish@2026',
       brandName: 'सीखो डिजिटल',
       upiId: 'seekhodigital@ybl',
       whatsapp: '919999999999',
       apkUrl: ''
     };
 
-    let courses = JSON.parse(localStorage.getItem('sd_courses')) || [
+    const DEFAULT_COURSES = [
       {
         id: 'c1',
         title: 'Full Digital Marketing & Affiliate Mastery 2026',
@@ -362,13 +403,17 @@
         title: 'E-Commerce & WhatsApp Sales Funnel Blueprint',
         price: 399,
         badge: 'Popular',
-        validity: 'Lifetime Access',
-        desc: 'Apने डिजिटल या फिजिकल प्रोडक्ट्स को WhatsApp और ऑटोमेशन से बेचने का पूरा सिस्टम।',
+        validity: '1 Year Access (365 Days)',
+        desc: 'अपने डिजिटल या फिजिकल प्रोडक्ट्स को WhatsApp और ऑटोमेशन से बेचने का पूरा सिस्टम।',
         waGroup: 'https://chat.whatsapp.com/sample-group-link-3',
         driveLink: 'https://drive.google.com/sample-course-3',
         thumb: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80'
       }
     ];
+    /*__LOCKED_CONFIG_END__*/
+
+    let settings = JSON.parse(localStorage.getItem('sd_owner_settings_v2')) || DEFAULT_SETTINGS;
+    let courses = JSON.parse(localStorage.getItem('sd_owner_courses_v2')) || DEFAULT_COURSES;
 
     let freeVideos = [
       {
@@ -386,6 +431,62 @@
     let orders = JSON.parse(localStorage.getItem('sd_orders')) || [];
     let currentCourse = null;
 
+    // Secret 5-Tap Logo Trigger or ?admin=owner URL check
+    let tapCount = 0;
+    let tapTimer = null;
+    function secretOwnerTap() {
+      tapCount++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { tapCount = 0; }, 1800);
+      if (tapCount >= 5) {
+        tapCount = 0;
+        openOwnerAuthModal();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('admin') === 'owner') {
+        openOwnerAuthModal();
+      }
+    });
+
+    function openOwnerAuthModal() {
+      document.getElementById('authGmailInput').value = '';
+      document.getElementById('authPassInput').value = '';
+      document.getElementById('ownerAuthModal').classList.remove('hidden');
+      document.getElementById('ownerAuthModal').classList.add('flex');
+    }
+
+    function closeOwnerAuth() {
+      document.getElementById('ownerAuthModal').classList.add('hidden');
+      document.getElementById('ownerAuthModal').classList.remove('flex');
+    }
+
+    function verifyOwnerCredentials() {
+      const enteredEmail = document.getElementById('authGmailInput').value.trim().toLowerCase();
+      const enteredPass = document.getElementById('authPassInput').value.trim();
+
+      // First-time setup: if ownerGmail is still default 'owner@gmail.com', allow setting their own Gmail with default password
+      const allowedEmail = (settings.ownerGmail || 'owner@gmail.com').toLowerCase();
+      const allowedPass = settings.ownerPass || 'Krish@2026';
+
+      if (
+        (allowedEmail === 'owner@gmail.com' || enteredEmail === allowedEmail) &&
+        enteredPass === allowedPass &&
+        enteredEmail.endsWith('@gmail.com')
+      ) {
+        if (allowedEmail === 'owner@gmail.com') {
+          settings.ownerGmail = enteredEmail;
+          localStorage.setItem('sd_owner_settings_v2', JSON.stringify(settings));
+        }
+        closeOwnerAuth();
+        openAdminPanelVerified();
+      } else {
+        alert('Access Denied! केवल वेबसाइट के मालिक की रजिस्टर्ड Gmail ID और सही मास्टर पासवर्ड से ही यह पैनल खुल सकता है।');
+      }
+    }
+
     // 10 Indian Languages Dictionary
     const translations = {
       hi: {
@@ -396,13 +497,13 @@
       },
       en: {
         heroTitle: 'Premium Video Courses & E-Books in One Super App',
-        heroSub: 'Join the official WhatsApp group immediately after UPI payment and learn with 1-Year or Lifetime validity.',
+        heroSub: 'Join the official WhatsApp group immediately after UPI payment and learn with 1-Year validity.',
         coursesHeading: 'Our Premium Courses & E-Books',
         buyBtn: 'Buy Now (UPI / QR)'
       },
       mr: {
         heroTitle: 'प्रीमियम व्हिडिओ कोर्सेस आणि ई-बुक्स आता एकाच ॲपमध्ये',
-        heroSub: 'UPI पेमेंट पूर्ण होताच थेट अधिकृत WhatsApp ग्रुपमध्ये सामील व्हा आणि १ वर्ष किंवा लाइफटाइम शिकत राहा.',
+        heroSub: 'UPI पेमेंट पूर्ण होताच थेट अधिकृत WhatsApp ग्रुपमध्ये सामील व्हा आणि १ वर्ष शिकत राहा.',
         coursesHeading: 'आमचे प्रीमियम कोर्सेस आणि ई-बुक्स',
         buyBtn: 'आताच खरेदी करा (UPI / QR)'
       },
@@ -478,7 +579,7 @@
       const grid = document.getElementById('coursesGrid');
       const buyLabel = (translations[currentLang] || translations.hi).buyBtn;
       if (courses.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-400 text-sm">कोई कोर्स उपलब्ध नहीं है। Admin पैनल से नया कोर्स जोड़ें।</div>`;
+        grid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-400 text-sm">जल्द ही नए कोर्सेज अपलोड किए जाएंगे।</div>`;
         return;
       }
       grid.innerHTML = courses.map(c => `
@@ -623,13 +724,13 @@
           <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded ${isLocked ? 'bg-red-500/20 text-red-300' : 'bg-emerald-500/20 text-emerald-300'}">
-                ${isLocked ? 'एक्सेस समाप्त / लॉक (1 साल पूरा)' : `एक्टिव • ${daysLeft} दिन शेष`}
+                ${isLocked ? 'एक्सेस समाप्त / ऑटो-लॉक (1 साल पूरा)' : `एक्टिव • ${daysLeft} दिन शेष`}
               </span>
               <h5 class="text-sm font-extrabold text-white mt-1">${o.courseTitle}</h5>
               <p class="text-[11px] text-slate-400">UTR: ${o.utr}</p>
             </div>
             ${isLocked ? `
-              <span class="text-xs text-red-400 font-bold"><i class="fa-solid fa-lock"></i> कोर्स लॉक हो चुका है</span>
+              <span class="text-xs text-red-400 font-bold"><i class="fa-solid fa-lock"></i> 1 साल पूरा होने के कारण कोर्स क्लोज हो चुका है</span>
             ` : `
               <div class="flex flex-wrap gap-2">
                 <a href="${o.waGroup}" target="_blank" class="bg-emerald-500 text-slate-950 font-bold text-xs px-3 py-2 rounded-lg">WhatsApp ग्रुप</a>
@@ -645,7 +746,7 @@
       if (settings.apkUrl && settings.apkUrl.trim() !== '') {
         window.open(settings.apkUrl, '_blank');
       } else {
-        alert('एडमिन पैनल (PIN: 1234) में जाकर अपना APK Download Link पेस्ट करें, या अपने ब्राउज़र के "Add to Home Screen / Install App" विकल्प से तुरंत ऐप इंस्टॉल करें।');
+        alert('ऑफिशियल ऐप जल्द ही उपलब्ध होगा! तब तक आप अपने ब्राउज़र के "Add to Home Screen" विकल्प से इसे ऐप की तरह इस्तेमाल कर सकते हैं।');
       }
     }
 
@@ -664,17 +765,15 @@
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Admin Functions
-    function openAdminModal() {
-      const pin = prompt('एडमिन पिन डालें (डिफ़ॉल्ट पिन: 1234):');
-      if (pin !== '1234') {
-        if (pin !== null) alert('गलत पिन!');
-        return;
-      }
+    // Verified Owner Admin Panel Functions
+    function openAdminPanelVerified() {
+      document.getElementById('admOwnerGmail').value = settings.ownerGmail || 'owner@gmail.com';
+      document.getElementById('admOwnerPass').value = settings.ownerPass || 'Krish@2026';
       document.getElementById('admBrandName').value = settings.brandName;
       document.getElementById('admUpiId').value = settings.upiId;
       document.getElementById('admWhatsapp').value = settings.whatsapp;
       document.getElementById('admApkUrl').value = settings.apkUrl || '';
+      renderAdminCourseList();
       renderAdminOrders();
       document.getElementById('adminModal').classList.remove('hidden');
       document.getElementById('adminModal').classList.add('flex');
@@ -686,13 +785,15 @@
     }
 
     function saveAdminSettings() {
+      settings.ownerGmail = document.getElementById('admOwnerGmail').value.trim().toLowerCase() || 'owner@gmail.com';
+      settings.ownerPass = document.getElementById('admOwnerPass').value.trim() || 'Krish@2026';
       settings.brandName = document.getElementById('admBrandName').value.trim() || 'सीखो डिजिटल';
       settings.upiId = document.getElementById('admUpiId').value.trim() || 'seekhodigital@ybl';
       settings.whatsapp = document.getElementById('admWhatsapp').value.trim() || '919999999999';
       settings.apkUrl = document.getElementById('admApkUrl').value.trim();
-      localStorage.setItem('sd_settings', JSON.stringify(settings));
+      localStorage.setItem('sd_owner_settings_v2', JSON.stringify(settings));
       applyBrandSettings();
-      alert('आपकी कंपनी, UPI और APK लिंक सेटिंग्स सेव हो गईं!');
+      alert('आपकी Owner Gmail, पासवर्ड, UPI और ब्रांड सेटिंग्स सेव हो गईं! अब ऊपर हरे बटन से अपडेटेड index.html डाउनलोड करके GitHub में डालें।');
     }
 
     function addNewCourse() {
@@ -719,17 +820,54 @@
         driveLink,
         desc
       });
-      localStorage.setItem('sd_courses', JSON.stringify(courses));
+      localStorage.setItem('sd_owner_courses_v2', JSON.stringify(courses));
       renderCourses();
-      alert('नया कोर्स सफलतापूर्वक जुड़ गया!');
+      renderAdminCourseList();
+      alert('नया कोर्स जुड़ गया! इसे सभी ग्राहकों के मोबाइल में दिखाने के लिए ऊपर हरे बटन से अपडेटेड index.html डाउनलोड करके GitHub में अपलोड करें।');
+    }
+
+    function renderAdminCourseList() {
+      const box = document.getElementById('adminCourseList');
+      if (courses.length === 0) {
+        box.innerHTML = `<div class="text-xs text-slate-500">कोई कोर्स नहीं है।</div>`;
+        return;
+      }
+      box.innerHTML = courses.map((c, i) => `
+        <div class="flex items-center justify-between bg-slate-900 border border-slate-800 px-3 py-2 rounded-lg text-xs">
+          <span class="font-bold text-white">${c.title} (₹${c.price})</span>
+          <button onclick="deleteSingleCourse(${i})" class="text-red-400 hover:text-red-300 font-bold">डिलीट करें</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteSingleCourse(idx) {
+      courses.splice(idx, 1);
+      localStorage.setItem('sd_owner_courses_v2', JSON.stringify(courses));
+      renderCourses();
+      renderAdminCourseList();
     }
 
     function clearAllCourses() {
       if (confirm('क्या आप सभी सैंपल कोर्सेज हटाना चाहते हैं?')) {
         courses = [];
-        localStorage.setItem('sd_courses', JSON.stringify(courses));
+        localStorage.setItem('sd_owner_courses_v2', JSON.stringify(courses));
         renderCourses();
+        renderAdminCourseList();
       }
+    }
+
+    // Export updated index.html with Owner's settings & courses permanently baked in
+    function downloadLockedHtmlFile() {
+      let fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const lockedBlock = `/*__LOCKED_CONFIG_START__*/\n    const DEFAULT_SETTINGS = ${JSON.stringify(settings, null, 6)};\n\n    const DEFAULT_COURSES = ${JSON.stringify(courses, null, 6)};\n    /*__LOCKED_CONFIG_END__*/`;
+      fullHtml = fullHtml.replace(/\/\*__LOCKED_CONFIG_START__\*\/[\s\S]*?\/\*__LOCKED_CONFIG_END__\*\//, lockedBlock);
+
+      const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      a.click();
     }
 
     function renderAdminOrders() {
