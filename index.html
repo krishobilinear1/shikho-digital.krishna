@@ -1,920 +1,1638 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0f172a" />
-  <title>Seekho Digital - Courses, E-Books & Official App</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #0b0f19;
-      color: #f8fafc;
-      user-select: none;
-      -webkit-user-select: none;
-      padding-bottom: 80px;
-    }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .glass {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .gradient-btn {
-      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SikhoDigital - Video Courses & Digital E-Books Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind', 'Poppins', sans-serif; scroll-behavior: smooth; }
+        /* 3D E-Book Cover Effect */
+        .ebook-3d-wrap {
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 18px 10px;
+        }
+        .ebook-3d-book {
+            position: relative;
+            width: 165px;
+            height: 225px;
+            transform: rotateY(-18deg) rotateX(4deg);
+            transform-style: preserve-3d;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            border-radius: 4px 12px 12px 4px;
+            box-shadow: -12px 14px 24px rgba(0,0,0,0.45), inset 4px 0 8px rgba(255,255,255,0.25);
+        }
+        .group:hover .ebook-3d-book {
+            transform: rotateY(-6deg) rotateX(2deg) scale(1.04);
+        }
+        /* Book Left Spine */
+        .ebook-3d-book::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 14px; height: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.55), rgba(255,255,255,0.22), rgba(0,0,0,0.25));
+            border-radius: 4px 0 0 4px;
+            z-index: 10;
+        }
+        /* Book White Pages Thickness on Right */
+        .ebook-3d-book::after {
+            content: '';
+            position: absolute;
+            top: 4px; right: -12px;
+            width: 12px; height: calc(100% - 8px);
+            background: repeating-linear-gradient(90deg, #f8fafc 0px, #e2e8f0 2px, #ffffff 4px);
+            border-radius: 0 3px 3px 0;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
+        }
+        /* Video Thumbnail Play Pulse */
+        .play-pulse {
+            animation: pulseRing 2s infinite;
+        }
+        @keyframes pulseRing {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
 </head>
-<body oncontextmenu="return false;">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
 
-  <!-- Top App Header (NO ADMIN BUTTON VISIBLE TO CUSTOMERS) -->
-  <header class="sticky top-0 z-40 glass px-4 py-3 flex items-center justify-between">
-    <!-- Secret Admin Trigger: Tap Logo/Brand Name 5 times quickly -->
-    <div onclick="secretOwnerTap()" class="flex items-center gap-2.5 cursor-pointer">
-      <div class="w-10 h-10 rounded-xl gradient-btn flex items-center justify-center font-extrabold text-white text-lg shadow-lg">
-        <i class="fa-solid fa-graduation-cap"></i>
-      </div>
-      <div>
-        <h1 id="brandNameDisplay" class="font-extrabold text-base sm:text-lg tracking-tight text-white leading-none">सीखो डिजिटल</h1>
-        <span class="text-[11px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
-          <i class="fa-solid fa-shield-halved"></i> Verified Digital Store
-        </span>
-      </div>
+    <!-- EMBEDDED DATA STORE (Auto-updates when Admin downloads updated index.html) -->
+    <script id="sikho-embedded-data">
+        window.SIKHO_CONFIG = {
+            adminPass: "krishna@2026",
+            whatsappNumber: "919876543210",
+            upiId: "sikhodigital@upi",
+            businessName: "SikhoDigital Academy",
+            bonusPdfTitle: "1000+ AI Prompts & Digital Business Secret E-Book (PDF)",
+            bonusPdfUrl: "https://drive.google.com/file/d/bonus-prompts-pdf/view",
+            courses: [
+                {
+                    id: "SD101",
+                    title: "AI & ChatGPT Masterclass Video Course",
+                    category: "video",
+                    mrp: 1999,
+                    discountPercent: 75,
+                    price: 499,
+                    gstMode: "none",
+                    badge: "BESTSELLER VIDEO",
+                    duration: "12+ घंटे HD Video",
+                    coverImage: "",
+                    coverColor: "from-indigo-600 via-purple-600 to-pink-600",
+                    whatsappGroup: "https://chat.whatsapp.com/invite-ai-masterclass",
+                    description: "ChatGPT, ऑटोमेशन और AI टूल्स से अपना ऑनलाइन बिज़नेस और फ्रीलांसिंग शुरू करना सीखें।",
+                    highlights: ["25+ स्टेप-बाय-स्टेप HD वीडियो लेसन", "प्रैक्टिकल लाइव स्क्रीन रिकॉर्डिंग", "कोर्स पूरा करने पर वेरीफाइड सर्टिफिकेट", "VIP WhatsApp सपोर्ट ग्रुप"],
+                    modules: [
+                        { title: "मॉड्यूल 1: AI और ChatGPT की बुनियादी समझ", type: "video", contentUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", notes: "इस वीडियो में आप प्रॉम्प्ट इंजीनियरिंग के मूल नियम सीखेंगे।" },
+                        { title: "मॉड्यूल 2: ऑटोमेशन और कंटेंट क्रिएशन वर्कफ़्लो", type: "video", contentUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", notes: "सोशल मीडिया और वेबसाइट के लिए 10x तेज़ काम करना सीखें।" },
+                        { title: "मॉड्यूल 3: AI से कमाई और क्लाइंट हंटिंग सिस्टम", type: "video", contentUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", notes: "अपनी सर्विस बेचकर हर महीने स्थिर इनकम बनाने का पूरा रोडमैप।" }
+                    ]
+                },
+                {
+                    id: "SD102",
+                    title: "Ultimate Video Editing & Reels Mastery",
+                    category: "video",
+                    mrp: 1499,
+                    discountPercent: 80,
+                    price: 299,
+                    gstMode: "none",
+                    badge: "TRENDING VIDEO",
+                    duration: "8.5 घंटे HD Video",
+                    coverImage: "",
+                    coverColor: "from-rose-600 via-orange-600 to-amber-500",
+                    whatsappGroup: "https://chat.whatsapp.com/invite-video-editing",
+                    description: "मोबाइल और PC से वायरल रील्स, YouTube वीडियो और हाई-कन्वर्टिंग एड्स एडिट करना सीखें।",
+                    highlights: ["मोबाइल + PC एडिटिंग ट्यूटोरियल", "500+ फ्री साउंड इफेक्ट्स और ट्रांजीशन पैक", "सर्टिफिकेट + लाइव डाउट ग्रुप"],
+                    modules: [
+                        { title: "मॉड्यूल 1: हाई-रिटेंशन हुक और कटिंग तकनीक", type: "video", contentUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", notes: "शुरुआती 3 सेकंड में दर्शक को रोकने का सीक्रेट।" },
+                        { title: "मॉड्यूल 2: कलर ग्रेडिंग, ऑडियो मिक्सिंग और कैप्शन", type: "video", contentUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", notes: "प्रोफेशनल सिनेमैटिक लुक और ऑटो-कैप्शन लगाना सीखें।" }
+                    ]
+                },
+                {
+                    id: "SD201",
+                    title: "Digital Marketing & Ads Secret Playbook",
+                    category: "ebook",
+                    mrp: 999,
+                    discountPercent: 80,
+                    price: 199,
+                    gstMode: "none",
+                    badge: "PREMIUM E-BOOK",
+                    duration: "145 Pages PDF Book",
+                    coverImage: "",
+                    coverColor: "from-emerald-600 via-teal-700 to-cyan-800",
+                    whatsappGroup: "https://chat.whatsapp.com/invite-ebook-club",
+                    description: "फेसबुक, इंस्टाग्राम और व्हाट्सऐप मार्केटिंग से रोज़ाना लीड्स और सेल्स लाने की संपूर्ण हिंदी ई-बुक गाइड।",
+                    highlights: ["145 पन्नों की आसान हिंदी डिजिटल बुक", "रेडी-टू-यूज़ एड टेम्पलेट्स और स्क्रिप्ट्स", "लाइफटाइम डाउनलोड + सर्टिफिकेट"],
+                    modules: [
+                        { title: "अध्याय 1: हाई-कन्वर्टिंग ऑफर और फनल ब्लूप्रिंट", type: "pdf", contentUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", notes: "कस्टमर को पहली बार में आकर्षित करने वाला ऑफर कैसे बनाएं।" },
+                        { title: "अध्याय 2: WhatsApp ऑटो-क्लोजिंग स्क्रिप्ट्स", type: "pdf", contentUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", notes: "चैट पर कस्टमर से पेमेंट क्लोज करने के 15 सिद्ध टेम्पलेट्स।" }
+                    ]
+                },
+                {
+                    id: "SD202",
+                    title: "500+ Viral ChatGPT & Midjourney Prompts Book",
+                    category: "ebook",
+                    mrp: 499,
+                    discountPercent: 99,
+                    price: 5,
+                    gstMode: "none",
+                    badge: "99% OFF SPECIAL",
+                    duration: "90 Pages PDF Book",
+                    coverImage: "",
+                    coverColor: "from-amber-500 via-orange-600 to-red-700",
+                    whatsappGroup: "https://chat.whatsapp.com/invite-free-learners",
+                    description: "स्टूडेंट्स और क्रिएटर्स के लिए 99% विशेष छूट पर कॉपी-पेस्ट AI प्रॉम्प्ट्स की संपूर्ण ई-बुक।",
+                    highlights: ["500+ रेडीमेड कॉपी-पेस्ट प्रॉम्प्ट्स", "YouTube, Reels और बिज़नेस के लिए", "तुरंत PDF एक्सेस + सर्टिफिकेट"],
+                    modules: [
+                        { title: "अध्याय 1: कंटेंट और स्क्रिप्ट राइटिंग प्रॉम्प्ट्स", type: "pdf", contentUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", notes: "1 क्लिक में वायरल स्क्रिप्ट तैयार करने के प्रॉम्प्ट्स।" },
+                        { title: "अध्याय 2: बिज़नेस और मार्केटिंग ऑटोमेशन प्रॉम्प्ट्स", type: "pdf", contentUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", notes: "बिज़नेस ग्रोथ और सेल्स बढ़ाने वाले प्रॉम्प्ट्स।" }
+                    ]
+                }
+            ]
+        };
+    </script>
+
+    <!-- TOP REFERRAL OFFER BANNER (30% Friend Discount + 50% Next Course Reward + Bonus PDF) -->
+    <div class="bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 text-white text-center py-2.5 px-4 text-xs sm:text-sm font-bold shadow-md">
+        <span>🎁 विन-विन रेफरल ऑफर: अपने दोस्त को रेफर करें — दोस्त को मिलेगी <u>30% की सीधी छूट</u> और आपको मिलेगा <u>अगले कोर्स पर 50% OFF का स्पेशल कूपन कोड</u> + फ्री बोनस AI Prompts PDF!</span>
     </div>
 
-    <div class="flex items-center gap-2">
-      <button onclick="scrollToApkSection()" class="bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-emerald-600/30">
-        <i class="fa-brands fa-android text-sm"></i> <span>Download App</span>
-      </button>
+    <!-- HEADER -->
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+            <a href="#" class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-extrabold text-xl shadow-lg">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <div class="text-xl font-extrabold tracking-tight text-white">Sikho<span class="text-indigo-400">Digital</span></div>
+                    <div class="text-[11px] text-slate-400 -mt-1">Video Courses & Digital E-Books Hub</div>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-2.5">
+                <button onclick="scrollToCatalog('video')" class="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition">
+                    <i class="fa-solid fa-circle-play text-rose-400"></i> Video Courses
+                </button>
+                <button onclick="scrollToCatalog('ebook')" class="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition">
+                    <i class="fa-solid fa-book-open text-emerald-400"></i> E-Books (PDF)
+                </button>
+                <button onclick="openStudentModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-indigo-600/30 transition">
+                    <i class="fa-solid fa-user-lock"></i>
+                    <span id="headerLoginBtnText">स्टूडेंट लॉगिन / माय कोर्सेज</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden py-10 sm:py-14 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7 space-y-5">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>पेमेंट के तुरंत बाद WhatsApp ग्रुप + कोर्स-स्पेसिफिक अनलॉक पिन (OTP)</span>
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-extrabold leading-tight text-white">
+                    प्रीमियम <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-amber-300 to-emerald-400">Video Courses</span> और <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">3D E-Books (PDF)</span> से अपनी स्किल्स बढ़ाएं!
+                </h1>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    अपना पसंदीदा **Video Course** या **Digital E-Book** चुनें। पेमेंट वेरीफाई होते ही आपको WhatsApp पर उस कोर्स का **स्पेशल अनलॉक पासवर्ड (PIN)** और VIP ग्रुप लिंक मिलेगा। सभी मॉड्यूल पूरे करें, 10 सवालों का क्विज़ दें और तुरंत **वेरीफाइड सर्टिफिकेट** डाउनलोड करें!
+                </p>
+
+                <!-- Quick Category Jump Buttons -->
+                <div class="flex flex-wrap gap-3 pt-1">
+                    <button onclick="scrollToCatalog('video')" class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-orange-600 hover:from-rose-500 hover:to-orange-500 text-white font-bold text-sm shadow-lg shadow-rose-600/25 transition">
+                        <i class="fa-solid fa-circle-play text-lg"></i> सारे Video Courses देखें
+                    </button>
+                    <button onclick="scrollToCatalog('ebook')" class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/25 transition">
+                        <i class="fa-solid fa-book text-lg"></i> सारी E-Books (PDF) देखें
+                    </button>
+                </div>
+            </div>
+
+            <!-- Referral Win-Win Highlight Card -->
+            <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-2xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-gift"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-sm sm:text-base">रेफर एंड अर्न (No-Jealousy System)</h3>
+                            <p class="text-[11px] text-slate-400">दोस्त को 30% छूट + आपको अगले कोर्स पर 50% OFF!</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold">100% Auto</span>
+                </div>
+                <div class="space-y-3 text-xs sm:text-sm text-slate-300">
+                    <div class="flex gap-3 items-start bg-slate-800/60 p-3 rounded-xl">
+                        <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center shrink-0 text-xs">1</span>
+                        <div><strong>दोस्त को 30% डिस्काउंट:</strong> आपके रेफरल लिंक या कोड (`REF-मोबाइल`) से जुड़ने पर दोस्त को तुरंत 30% की छूट मिलेगी।</div>
+                    </div>
+                    <div class="flex gap-3 items-start bg-slate-800/60 p-3 rounded-xl">
+                        <span class="w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-bold flex items-center justify-center shrink-0 text-xs">2</span>
+                        <div><strong>आपको 50% OFF कूपन + बोनस PDF:</strong> दोस्त का पेमेंट होते ही आपके WhatsApp पर <strong>फ्री बोनस AI Prompts PDF</strong> और आपके अगले कोर्स के लिए <strong>50% OFF का स्पेशल कोड (`NEXT50-...`)</strong> तुरंत भेजा जाएगा!</div>
+                    </div>
+                    <div class="flex gap-3 items-start bg-slate-800/60 p-3 rounded-xl">
+                        <span class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 font-bold flex items-center justify-center shrink-0 text-xs">3</span>
+                        <div><strong>100% कोर्स + क्विज़ = सर्टिफिकेट:</strong> कोर्स के सभी पेज पूरे करके 10 सवालों का क्विज़ पास करें और अपना सर्टिफिकेट डाउनलोड व WhatsApp पर शेयर करें।</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CATALOG SECTION WITH BIG SWITCH BAR (VIDEO COURSES vs E-BOOKS PDF) -->
+    <main id="catalogSection" class="max-w-7xl mx-auto px-4 py-10 flex-1 w-full">
+        <!-- Prominent Top Switch Line -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-4 mb-8 shadow-xl">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <!-- Category Switch Tabs -->
+                <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2.5">
+                    <button id="tab-video" onclick="switchCatalogCategory('video')" class="flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all">
+                        <i class="fa-solid fa-circle-play text-base"></i>
+                        <span>🎬 Video Courses</span>
+                        <span id="count-video" class="px-2 py-0.5 rounded-full text-xs bg-black/30">0</span>
+                    </button>
+                    <button id="tab-ebook" onclick="switchCatalogCategory('ebook')" class="flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all">
+                        <i class="fa-solid fa-book-open text-base"></i>
+                        <span>📚 E-Books (PDF Courses)</span>
+                        <span id="count-ebook" class="px-2 py-0.5 rounded-full text-xs bg-black/30">0</span>
+                    </button>
+                    <button id="tab-all" onclick="switchCatalogCategory('all')" class="col-span-2 sm:col-span-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>सभी देखें (All)</span>
+                        <span id="count-all" class="px-2 py-0.5 rounded-full text-xs bg-black/30">0</span>
+                    </button>
+                </div>
+
+                <!-- Search Input -->
+                <div class="relative w-full md:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input id="catalogSearch" oninput="renderCatalog()" type="text" placeholder="कोर्स या ई-बुक खोजें..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Section Heading -->
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 id="catalogHeading" class="text-xl sm:text-2xl font-extrabold text-white">🎬 प्रीमियम Video Courses</h2>
+                <p id="catalogSubheading" class="text-xs sm:text-sm text-slate-400">स्टेप-बाय-स्टेप प्रैक्टिकल वीडियो ट्रेनिंग + वेरीफाइड सर्टिफिकेट</p>
+            </div>
+            <button onclick="openStudentModal()" class="text-xs sm:text-sm font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-key"></i> पहले से खरीदा है? पिन से खोलें
+            </button>
+        </div>
+
+        <!-- Courses / E-Books Cards Grid -->
+        <div id="catalogGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7"></div>
+    </main>
+
+    <!-- STUDENT LEARNING PORTAL & REFERRAL DASHBOARD MODAL -->
+    <div id="studentModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm overflow-y-auto p-3 sm:p-6">
+        <div class="max-w-5xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-4">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-indigo-900/80 via-slate-900 to-purple-900/80 px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-white text-base sm:text-lg">स्टूडेंट लर्निंग पोर्टल (Video Courses & E-Books)</h3>
+                        <p class="text-xs text-slate-300">अपने खरीदे गए कोर्स को स्पेशल पिन (OTP) से अनलॉक करें और सर्टिफिकेट पाएं</p>
+                    </div>
+                </div>
+                <button onclick="closeStudentModal()" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Login Form (If not logged in) -->
+            <div id="studentLoginBox" class="p-6 max-w-md mx-auto space-y-4">
+                <div class="text-center space-y-1">
+                    <h4 class="text-lg font-bold text-white">अपने मोबाइल नंबर से लॉगिन करें</h4>
+                    <p class="text-xs text-slate-400">लॉगिन करते ही आपका रेफरल लिंक और सभी कोर्सेज (Video & E-Book) दिखेंगे</p>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-300">आपका नाम *</label>
+                    <input id="stuLoginName" type="text" placeholder="जैसे: राहुल शर्मा" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-300">10-अंकों का WhatsApp मोबाइल नंबर *</label>
+                    <input id="stuLoginPhone" type="tel" maxlength="10" placeholder="9876543210" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white">
+                </div>
+                <button onclick="handleStudentLogin()" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-lg">
+                    पोर्टल में प्रवेश करें <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+
+            <!-- Student Logged-In Dashboard -->
+            <div id="studentDashboardBox" class="hidden p-5 sm:p-6 space-y-6">
+                <!-- Student Info + Referral Link Bar -->
+                <div class="grid md:grid-cols-12 gap-4 bg-slate-950 border border-slate-800 rounded-2xl p-4">
+                    <div class="md:col-span-5 flex items-center justify-between md:border-r border-slate-800 pr-3">
+                        <div>
+                            <div class="text-xs text-slate-400">लॉगिन स्टूडेंट:</div>
+                            <div id="stuWelcomeName" class="text-base font-extrabold text-white">नमस्ते!</div>
+                            <div id="stuWelcomePhone" class="text-xs text-indigo-400 font-semibold"></div>
+                        </div>
+                        <button onclick="studentLogout()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950 text-xs text-rose-300 font-semibold">
+                            लॉगआउट
+                        </button>
+                    </div>
+                    <div class="md:col-span-7 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-400"><i class="fa-solid fa-share-nodes mr-1"></i> आपका रेफरल लिंक (दोस्त को 30% छूट + आपको अगले कोर्स पर 50% OFF):</span>
+                            <span id="stuRefCodeBadge" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono text-xs font-bold"></span>
+                        </div>
+                        <div class="flex gap-2">
+                            <input id="stuReferralLinkInput" readonly class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 font-mono">
+                            <button onclick="copyReferralLink()" class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shrink-0">
+                                कॉपी करें
+                            </button>
+                            <button onclick="shareReferralWhatsApp()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shrink-0">
+                                <i class="fa-brands fa-whatsapp"></i> शेयर
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Switch Inside Student Portal: Video Courses vs E-Books (PDF) -->
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                    <div class="flex gap-2">
+                        <button id="stuTab-video" onclick="switchStudentCategory('video')" class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition">
+                            🎬 Video Courses (<span id="stuCount-video">0</span>)
+                        </button>
+                        <button id="stuTab-ebook" onclick="switchStudentCategory('ebook')" class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition">
+                            📚 E-Books / PDF (<span id="stuCount-ebook">0</span>)
+                        </button>
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> जिस कोर्स को खरीदा है, केवल उसी का पासवर्ड (PIN) उसमें काम करेगा।
+                    </div>
+                </div>
+
+                <!-- Student Courses List (Locked / Unlocked) -->
+                <div id="studentCoursesList" class="grid sm:grid-cols-2 gap-4"></div>
+
+                <!-- Active Unlocked Course Viewer (Sequential Modules + 10-Question Quiz + Certificate) -->
+                <div id="activeCourseLearningArea" class="hidden bg-slate-950 border-2 border-indigo-500/50 rounded-2xl p-5 space-y-5"></div>
+            </div>
+        </div>
     </div>
-  </header>
 
-  <!-- 10 Indian Languages Bar -->
-  <div class="bg-slate-900/90 border-b border-slate-800 px-3 py-2 flex items-center gap-2 overflow-x-auto no-scrollbar">
-    <span class="text-xs text-slate-400 font-semibold shrink-0"><i class="fa-solid fa-language text-amber-400 mr-1"></i>भाषा:</span>
-    <button onclick="setLang('hi')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-slate-950" data-lang="hi">हिंदी</button>
-    <button onclick="setLang('en')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300" data-lang="en">English</button>
-    <button onclick="setLang('mr')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300" data-lang="mr">मराठी</button>
-    <button onclick="setLang('te')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300" data-lang="te">తెలుగు</button>
-    <button onclick="setLang('ta')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300" data-lang="ta">தமிழ்</button>
-    <button onclick="setLang('bn')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300" data-lang="bn">বাংলা</button>
-    <button onclick="setLang('gu')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300" data-lang="gu">ગુજરાતી</button>
-    <button onclick="setLang('kn')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300" data-lang="kn">ಕನ್ನಡ</button>
-    <button onclick="setLang('ml')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300" data-lang="ml">മലയാളം</button>
-    <button onclick="setLang('pa')" class="lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300" data-lang="pa">ਪੰਜਾਬੀ</button>
-  </div>
+    <!-- CHECKOUT & COURSE-SPECIFIC PIN GENERATION MODAL -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm overflow-y-auto p-3 sm:p-6">
+        <div class="max-w-lg mx-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-6">
+            <div class="bg-slate-950 px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-lock text-emerald-400"></i>
+                    <div>
+                        <h3 class="font-bold text-white text-sm sm:text-base">सुरक्षित चेकआउट और इंस्टेंट कोर्स पिन (OTP)</h3>
+                        <p class="text-[11px] text-slate-400">पेमेंट होते ही कोर्स का स्पेशल पासवर्ड और WhatsApp ग्रुप खुलेगा</p>
+                    </div>
+                </div>
+                <button onclick="closeCheckoutModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
 
-  <!-- Main Content Container -->
-  <main class="max-w-5xl mx-auto px-4 pt-5 space-y-8">
+            <!-- Step 1: Checkout Form -->
+            <div id="checkoutFormStep" class="p-5 space-y-4">
+                <div id="checkoutCourseSummary" class="p-3.5 rounded-xl bg-slate-950 border border-slate-800"></div>
 
-    <!-- Hero Banner -->
-    <section id="sec-home" class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/40 border border-slate-800 p-5 sm:p-8 shadow-xl">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold mb-3">
-        <i class="fa-solid fa-bolt"></i> <span>100% सुरक्षित UPI पेमेंट • तुरंत WhatsApp एक्सेस</span>
-      </div>
-      <h2 id="heroTitle" class="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
-        प्रीमियम वीडियो कोर्सेज और ई-बुक्स अब एक ही ऐप में
-      </h2>
-      <p id="heroSub" class="text-slate-300 text-sm sm:text-base mt-2 max-w-2xl">
-        पेमेंट पूरा होते ही सीधा ऑफिशियल WhatsApp ग्रुप में जुड़ें और 1 साल या लाइफटाइम वैलिडिटी के साथ कभी भी पढ़ाई करें।
-      </p>
-      <div class="flex flex-wrap gap-3 mt-5">
-        <button onclick="switchTab('courses')" class="gradient-btn text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-lg flex items-center gap-2">
-          <i class="fa-solid fa-cart-shopping"></i> <span>कोर्सेज देखें</span>
-        </button>
-        <button onclick="switchTab('library')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm px-5 py-2.5 rounded-xl border border-slate-700 flex items-center gap-2">
-          <i class="fa-solid fa-user-lock text-amber-400"></i> <span>मेरा कोर्स / लॉगिन</span>
-        </button>
-      </div>
-    </section>
+                <div class="grid sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300">आपका पूरा नाम *</label>
+                        <input id="chkName" type="text" placeholder="सर्टिफिकेट के लिए नाम" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300">WhatsApp मोबाइल नंबर *</label>
+                        <input id="chkPhone" type="tel" maxlength="10" placeholder="10-अंकों का नंबर" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white">
+                    </div>
+                </div>
 
-    <!-- Paid Courses & E-Books Section -->
-    <section id="sec-courses" class="space-y-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 id="coursesHeading" class="text-lg sm:text-xl font-extrabold text-white">हमारे प्रीमियम कोर्सेज और ई-बुक्स</h3>
-          <p class="text-xs text-slate-400">Direct UPI & QR Payment • Instant WhatsApp Group Access</p>
+                <!-- Referral / 50% Coupon Input -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2">
+                    <label class="text-xs font-semibold text-amber-300 flex items-center justify-between">
+                        <span>🎁 रेफरल कोड (30% OFF) या 50% रिवॉर्ड कूपन:</span>
+                        <span id="couponStatusBadge" class="text-[11px] text-emerald-400 font-bold"></span>
+                    </label>
+                    <div class="flex gap-2">
+                        <input id="chkCoupon" type="text" placeholder="REF-9876543210 या NEXT50-..." class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white font-mono uppercase">
+                        <button onclick="applyCheckoutCoupon()" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shrink-0">
+                            लागू करें
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Price Breakdown Box -->
+                <div id="checkoutPriceBreakdown" class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs space-y-1.5"></div>
+
+                <!-- UPI Payment Info -->
+                <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-indigo-200 font-semibold">UPI ID पर पेमेंट करें:</span>
+                        <span id="displayUpiId" class="font-mono font-bold text-amber-300"></span>
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-300">UPI Transaction / UTR नंबर (अंतिम 4 या 12 अंक) *</label>
+                        <input id="chkUtr" type="text" placeholder="जैसे: 4125XXXXXX" class="w-full mt-1 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white font-mono">
+                    </div>
+                </div>
+
+                <button onclick="completePaymentAndGeneratePin()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/30">
+                    पेमेंट वेरीफाई करें और कोर्स पासवर्ड (PIN) पाएं <i class="fa-solid fa-key ml-1"></i>
+                </button>
+            </div>
+
+            <!-- Step 2: Payment Success + Course-Specific PIN + WhatsApp Delivery -->
+            <div id="checkoutSuccessStep" class="hidden p-5 space-y-4 text-center"></div>
         </div>
-      </div>
-      <div id="coursesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-    </section>
+    </div>
 
-    <!-- Free Lifetime YouTube Video Courses -->
-    <section id="sec-videos" class="space-y-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 class="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
-            <i class="fa-brands fa-youtube text-red-500"></i> फ्री लाइफटाइम वीडियो क्लासेस
-          </h3>
-          <p class="text-xs text-slate-400">बिना सब्सक्रिप्शन के भी लाइफटाइम फ्री एक्सेस</p>
+    <!-- PROTECTED ADMIN CONTROL PANEL MODAL (HIDDEN FROM PUBLIC - OPENS ONLY VIA FOOTER LOCK) -->
+    <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-md overflow-y-auto p-3 sm:p-6">
+        <div class="max-w-6xl mx-auto bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden my-4">
+            <div class="bg-slate-950 px-5 py-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-extrabold">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-white text-base sm:text-lg">Admin Control Center (सिर्फ कृष्णा जी के लिए प्रोटेक्टेड)</h3>
+                        <p class="text-xs text-slate-400">यहाँ से Video Course या E-Book जोड़ें, कवर फोटो लगाएं और नया अपडेटेड index.html डाउनलोड करें</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="downloadUpdatedHtmlFile()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-download"></i> 📥 नया अपडेटेड index.html डाउनलोड करें (GitHub के लिए)
+                    </button>
+                    <button onclick="closeAdminModal()" class="w-9 h-9 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-5 sm:p-6 grid lg:grid-cols-12 gap-6">
+                <!-- Left Column: Add / Edit Course or E-Book Form -->
+                <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h4 id="adminFormHeading" class="font-extrabold text-amber-400 text-sm sm:text-base">➕ नया Video Course या E-Book (PDF) जोड़ें</h4>
+                        <button onclick="resetAdminCourseForm()" class="text-xs text-slate-400 hover:text-white underline">नया फॉर्म रीसेट करें</button>
+                    </div>
+
+                    <input type="hidden" id="admEditId" value="">
+
+                    <div class="grid sm:grid-cols-3 gap-3">
+                        <div class="sm:col-span-2">
+                            <label class="text-xs font-semibold text-slate-300">कोर्स / ई-बुक का नाम (Title) *</label>
+                            <input id="admTitle" type="text" placeholder="जैसे: Canva Graphic Design E-Book" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-amber-300">प्रकार (Category) *</label>
+                            <select id="admCategory" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-amber-500/50 text-sm text-white font-bold">
+                                <option value="video">🎬 Video Course</option>
+                                <option value="ebook">📚 E-Book (PDF Course)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Auto MRP, Discount % and Final Price Calculator -->
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-indigo-300"><i class="fa-solid fa-calculator mr-1"></i> ऑटोमैटिक MRP और % डिस्काउंट कैलकुलेटर:</span>
+                            <div class="flex flex-wrap gap-1">
+                                <button type="button" onclick="setQuickDiscount(30)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-indigo-600 text-[11px] font-bold">30%</button>
+                                <button type="button" onclick="setQuickDiscount(50)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-indigo-600 text-[11px] font-bold">50%</button>
+                                <button type="button" onclick="setQuickDiscount(75)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-indigo-600 text-[11px] font-bold">75%</button>
+                                <button type="button" onclick="setQuickDiscount(99)" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 text-[11px] font-bold">99% OFF</button>
+                                <button type="button" onclick="setQuickDiscount(100)" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-slate-950 text-[11px] font-bold">100% FREE</button>
+                            </div>
+                        </div>
+                        <div class="grid sm:grid-cols-4 gap-2.5">
+                            <div>
+                                <label class="text-[11px] text-slate-400">1. असली MRP (₹)</label>
+                                <input id="admMrp" type="number" value="999" oninput="calcAdminPrice('mrp')" class="w-full mt-1 px-2.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white font-bold">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">2. डिस्काउंट (%)</label>
+                                <input id="admDiscount" type="number" value="80" min="0" max="100" oninput="calcAdminPrice('percent')" class="w-full mt-1 px-2.5 py-2 rounded-lg bg-slate-950 border border-amber-500/40 text-sm text-amber-300 font-bold">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">3. फाइनल कीमत (₹)</label>
+                                <input id="admPrice" type="number" value="199" oninput="calcAdminPrice('price')" class="w-full mt-1 px-2.5 py-2 rounded-lg bg-slate-950 border border-emerald-500/40 text-sm text-emerald-400 font-extrabold">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">4. GST नियम</label>
+                                <select id="admGst" class="w-full mt-1 px-2 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white">
+                                    <option value="none">0% No GST (100% खुद रखें)</option>
+                                    <option value="inclusive">18% GST Inclusive</option>
+                                    <option value="extra">+18% GST Extra</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cover Photo Upload (For 3D E-Book Cover or Video Thumbnail) -->
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+                        <label class="text-xs font-bold text-emerald-300 block">
+                            <i class="fa-solid fa-image mr-1"></i> E-Book का फ्रंट पेज फोटो या Video का YouTube जैसा Thumbnail:
+                        </label>
+                        <div class="grid sm:grid-cols-2 gap-3 items-center">
+                            <div>
+                                <label class="text-[11px] text-slate-400 block mb-1">मोबाइल/कंप्यूटर से फोटो चुनें (Auto Compress):</label>
+                                <input id="admImageFile" type="file" accept="image/*" onchange="handleAdminImageUpload(event)" class="w-full text-xs text-slate-300 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400 block mb-1">या फोटो लिंक (Image URL) डालें:</label>
+                                <input id="admCoverUrl" type="text" placeholder="https://... (खाली छोड़ने पर ऑटो 3D कवर बनेगा)" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="text-xs text-slate-300">अवधि / पन्ने (Duration/Pages)</label>
+                            <input id="admDuration" type="text" placeholder="12 घंटे Video या 140 Pages PDF" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-300">टॉप बैज (Badge)</label>
+                            <input id="admBadge" type="text" placeholder="BESTSELLER / 99% OFF" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-300">VIP WhatsApp ग्रुप लिंक</label>
+                            <input id="admWaGroup" type="text" placeholder="https://chat.whatsapp.com/..." class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300">कोर्स का विवरण (Description)</label>
+                        <textarea id="admDesc" rows="2" placeholder="इस कोर्स या ई-बुक में स्टूडेंट क्या-क्या सीखेंगे..." class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300">क्या-क्या मिलेगा? (Highlights - कॉमा `,` से अलग करें)</label>
+                        <input id="admHighlights" type="text" placeholder="HD वीडियो लेसन, प्रैक्टिकल PDF नोट्स, वेरीफाइड सर्टिफिकेट, WhatsApp सपोर्ट" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white">
+                    </div>
+
+                    <!-- Dynamic Modules Builder -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-300">📖 कोर्स के अंदर के क्रमिक पेज / मॉड्यूल्स (Sequential Modules):</span>
+                            <button type="button" onclick="addAdminModuleRow()" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">
+                                + नया पेज/मॉड्यूल जोड़ें
+                            </button>
+                        </div>
+                        <div id="admModulesContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                    </div>
+
+                    <button onclick="saveAdminCourse()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-extrabold text-sm shadow-lg">
+                        💾 कोर्स सेव / अपडेट करें
+                    </button>
+                </div>
+
+                <!-- Right Column: Existing Courses Manager + Settings + PIN Generator -->
+                <div class="lg:col-span-5 space-y-5">
+                    <!-- Global Settings -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
+                        <h4 class="font-bold text-white text-sm"><i class="fa-solid fa-gear text-indigo-400 mr-1"></i> आपकी पेमेंट, WhatsApp और बोनस PDF सेटिंग्स</h4>
+                        <div class="grid sm:grid-cols-2 gap-2.5 text-xs">
+                            <div>
+                                <label class="text-slate-400">आपका WhatsApp नंबर (91 के साथ)</label>
+                                <input id="cfgWhatsapp" type="text" class="w-full mt-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white">
+                            </div>
+                            <div>
+                                <label class="text-slate-400">आपकी UPI ID</label>
+                                <input id="cfgUpi" type="text" class="w-full mt-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="text-slate-400">रेफरल बोनस PDF लिंक (दोस्त जुड़ने पर जो फ्री मिलेगा)</label>
+                                <input id="cfgBonusUrl" type="text" class="w-full mt-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white">
+                            </div>
+                        </div>
+                        <button onclick="saveGlobalSettings()" class="w-full py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
+                            सेटिंग्स सेव करें
+                        </button>
+                    </div>
+
+                    <!-- Manual Course-Specific PIN Generator for Any Student -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2.5">
+                        <h4 class="font-bold text-emerald-400 text-sm"><i class="fa-solid fa-key mr-1"></i> किसी स्टूडेंट के लिए कोर्स पासवर्ड (PIN) बनाएं</h4>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <input id="pinGenPhone" type="tel" maxlength="10" placeholder="स्टूडेंट मोबाइल नंबर" class="px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white">
+                            <select id="pinGenCourse" class="px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white"></select>
+                        </div>
+                        <button onclick="adminGenerateStudentPin()" class="w-full py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs">
+                            स्पेशल कोर्स पिन जनरेट करें और WhatsApp पर भेजें
+                        </button>
+                        <div id="pinGenResult" class="hidden p-2.5 rounded-lg bg-slate-900 border border-emerald-500/40 text-xs text-center"></div>
+                    </div>
+
+                    <!-- Existing Courses List (Edit / Delete / 99% OFF Toggle) -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
+                        <h4 class="font-bold text-white text-sm">📚 मौजूदा Video Courses & E-Books (<span id="adminTotalCount">0</span>)</h4>
+                        <div id="adminCourseList" class="space-y-2.5 max-h-80 overflow-y-auto pr-1"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div id="freeVideosGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-    </section>
+    </div>
 
-    <!-- Student Login & 1-Year Access Vault + Download APK Section -->
-    <section id="sec-library" class="space-y-6">
-      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-5 sm:p-6">
-        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
-          <i class="fa-solid fa-key text-amber-400"></i> स्टूडेंट लॉगिन और माय लाइब्रेरी (1-Year Auto-Lock System)
-        </h3>
-        <p class="text-xs text-slate-400 mt-1">अपना रजिस्टर्ड मोबाइल नंबर और ईमेल डालकर अपने खरीदे हुए कोर्सेज खोलें। (1 साल पूरा होने पर कोर्स ऑटोमैटिक क्लोज हो जाएगा)</p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
-          <input id="stuMobile" type="tel" placeholder="मोबाइल नंबर (10 अंक)" class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500" />
-          <input id="stuEmail" type="email" placeholder="ईमेल आईडी (Email ID)" class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500" />
-          <button onclick="studentLogin()" class="gradient-btn text-white font-bold text-sm rounded-xl py-2.5 px-4 shadow">
-            लॉगिन / एक्सेस खोलें
-          </button>
+    <!-- FOOTER WITH DISCREET ADMIN LOCK ICON AT THE BOTTOM -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-6 px-4 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-white">SikhoDigital Academy</span>
+                <span>© 2026 All Rights Reserved.</span>
+                <!-- Discreet Protected Admin Lock Button (Only for Owner) -->
+                <button onclick="promptAdminLogin()" title="Owner Admin Access" class="ml-2 text-slate-700 hover:text-amber-400 transition">
+                    <i class="fa-solid fa-lock text-[11px]"></i>
+                </button>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="scrollToCatalog('video')" class="hover:text-white">🎬 Video Courses</button>
+                <button onclick="scrollToCatalog('ebook')" class="hover:text-white">📚 E-Books (PDF)</button>
+                <button onclick="openStudentModal()" class="hover:text-white">🎓 Student Login</button>
+            </div>
         </div>
-
-        <div id="studentVault" class="mt-5 hidden space-y-4"></div>
-      </div>
-
-      <!-- Dedicated Download APK Banner -->
-      <div id="apkDownloadSection" class="rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-emerald-950/60 border border-emerald-500/40 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
-        <div class="space-y-1.5">
-          <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
-            <i class="fa-brands fa-android"></i> Official Android App (APK)
-          </span>
-          <h4 class="text-lg sm:text-xl font-extrabold text-white">बार-बार वेबसाइट खोलने की ज़रूरत नहीं!</h4>
-          <p class="text-xs sm:text-sm text-slate-300 max-w-xl">
-            हमारा ऑफिशियल Android APK डाउनलोड करें और कभी भी एक क्लिक में अपने खरीदे हुए कोर्सेज, ई-बुक्स और WhatsApp ग्रुप एक्सेस करें।
-          </p>
-        </div>
-        <button onclick="downloadOfficialApk()" class="w-full sm:w-auto shrink-0 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm px-6 py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2">
-          <i class="fa-solid fa-download"></i> Download APK Now
-        </button>
-      </div>
-    </section>
-
-    <!-- Strict Indian Legal & Anti-Piracy Terms -->
-    <footer class="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 text-xs text-slate-400 space-y-3">
-      <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
-        <i class="fa-solid fa-scale-balanced"></i> कानूनी सूचना, कॉपीराइट और नियम व शर्तें (Indian Cyber & Copyright Law)
-      </div>
-      <p>
-        <strong>1. सर्वाधिकार सुरक्षित (All Rights Reserved - Copyright Act, 1957):</strong> इस वेबसाइट और ऐप पर उपलब्ध सभी वीडियो कोर्सेज, ई-बुक्स, पीडीएफ और डिजिटल सामग्री पूरी तरह से <span id="legalBrandName" class="text-white font-semibold">सीखो डिजिटल</span> की निजी बौद्धिक संपदा हैं। किसी भी ग्राहक को केवल व्यक्तिगत सीखने के लिए 1 वर्ष (365 दिन) का सीमित एक्सेस दिया जाता है, री-सेल या कॉपीराइट का अधिकार नहीं।
-      </p>
-      <p>
-        <strong>2. एंटी-पायरेसी चेतावनी (IT Act, 2000 & BNS):</strong> कोर्स का स्क्रीनशॉट लेना, स्क्रीन रिकॉर्डिंग करना, लिंक शेयर करना या किसी अन्य टेलीग्राम/व्हाट्सएप ग्रुप में बेचना गैर-कानूनी है। ऐसा पकड़े जाने पर बिना रिफंड के तुरंत एक्सेस ब्लॉक कर दिया जाएगा और भारतीय कॉपीराइट अधिनियम 1957 की धारा 63 एवं आईटी एक्ट 2000 की धारा 66 के तहत कानूनी कार्रवाई की जाएगी।
-      </p>
-      <p>
-        <strong>3. सुरक्षित पेमेंट और डेटा सुरक्षा (DPDP Act, 2023):</strong> सभी भुगतान सीधे सरकारी UPI नेटवर्क के माध्यम से होते हैं। हम किसी भी ग्राहक का बैंक पासवर्ड, कार्ड नंबर या गुप्त पिन स्टोर नहीं करते हैं।
-      </p>
-      <div class="pt-2 border-t border-slate-800 flex flex-wrap justify-between gap-2 text-[11px] text-slate-500">
-        <span>© 2026 <span id="footerBrand">सीखो डिजिटल</span> • All Rights Reserved.</span>
-        <span>Grievance & Support WhatsApp: <span id="footerWa">+91-9999999999</span></span>
-      </div>
     </footer>
 
-  </main>
+    <!-- CORE APPLICATION JAVASCRIPT -->
+    <script>
+        let activeCatalogCategory = 'video'; // Default shows Video Courses tab highlighted, or user can switch to ebook
+        let activeStudentCategory = 'video';
+        let currentCheckoutCourse = null;
+        let appliedCouponDiscount = 0; // 0, 30, or 50
+        let appliedReferrerPhone = "";
 
-  <!-- Direct UPI & QR Checkout Modal -->
-  <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div>
-          <span class="text-[11px] text-emerald-400 font-bold"><i class="fa-solid fa-lock"></i> 100% Secure Direct UPI Gateway</span>
-          <h4 id="chkCourseTitle" class="text-base font-extrabold text-white">कोर्स का नाम</h4>
-        </div>
-        <button onclick="closeCheckout()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <!-- Order Bump -->
-      <label class="flex items-start gap-2.5 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 cursor-pointer">
-        <input id="orderBumpChk" type="checkbox" onchange="updateCheckoutTotal()" class="mt-1 accent-amber-500" />
-        <div class="text-xs">
-          <div class="font-bold text-amber-300">स्पेशल ऑफर (+₹99): 50+ रेडीमेड ई-बुक टेम्पलेट्स और बोनस टूलकिट जोड़ें!</div>
-          <div class="text-slate-400">सिर्फ अभी के ऑर्डर के साथ 80% डिस्काउंट पर उपलब्ध।</div>
-        </div>
-      </label>
-
-      <!-- Live QR & UPI Box -->
-      <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center space-y-2">
-        <div class="text-xs text-slate-400">कुल देय राशि (Total Payable)</div>
-        <div id="chkTotalAmount" class="text-2xl font-extrabold text-emerald-400">₹499</div>
-        <img id="upiQrImg" src="" alt="UPI QR Code" class="w-40 h-40 mx-auto rounded-xl bg-white p-2 border border-slate-700" />
-        <div class="text-xs text-slate-300">
-          Verified Merchant UPI: <strong id="displayUpiId" class="text-amber-300 select-all">seekhodigital@ybl</strong>
-        </div>
-        <a id="upiIntentBtn" href="#" class="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs">
-          <i class="fa-solid fa-mobile-screen-button"></i> GPay / PhonePe / Paytm ऐप से पेमेंट करें
-        </a>
-      </div>
-
-      <!-- Buyer Details & 12-Digit UTR -->
-      <div class="space-y-2.5">
-        <input id="buyerName" type="text" placeholder="आपका पूरा नाम *" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white" />
-        <input id="buyerMobile" type="tel" placeholder="आपका WhatsApp मोबाइल नंबर (10 अंक) *" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white" />
-        <input id="buyerEmail" type="email" placeholder="आपकी ईमेल आईडी *" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white" />
-        <input id="buyerUtr" type="text" maxlength="12" placeholder="12-अंकों का UPI Reference / UTR नंबर डालें *" class="w-full bg-slate-950 border border-amber-500/50 rounded-xl px-3 py-2 text-xs text-white font-mono" />
-      </div>
-
-      <button onclick="verifyAndCompletePayment()" class="w-full gradient-btn text-white font-extrabold text-sm py-3 rounded-xl shadow-lg">
-        पेमेंट कन्फर्म करें और WhatsApp ग्रुप लिंक पाएं <i class="fa-solid fa-arrow-right ml-1"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- Instant Redirect Page Modal -->
-  <div id="redirectModal" class="fixed inset-0 z-50 bg-slate-950/95 hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-emerald-500/40 rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
-      <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-3xl mx-auto">
-        <i class="fa-solid fa-check"></i>
-      </div>
-      <h3 class="text-xl font-extrabold text-white">पेमेंट डिटेल दर्ज हो गई है!</h3>
-      <p class="text-xs text-slate-300">
-        आपका 1 साल (365 दिन) का कोर्स रिकॉर्ड जुड़ गया है। नीचे दिए गए बटन पर क्लिक करके तुरंत अपने कोर्स के **Official WhatsApp Group** में जुड़ें:
-      </p>
-      <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-left space-y-1">
-        <div><strong>कोर्स:</strong> <span id="redCourseName" class="text-amber-300"></span></div>
-        <div><strong>UTR नंबर:</strong> <span id="redUtr" class="text-emerald-400 font-mono"></span></div>
-        <div><strong>एक्सेस वैलिडिटी:</strong> 365 दिन (1 साल बाद ऑटो-लॉक)</div>
-      </div>
-      <a id="redWhatsappGroupBtn" href="#" target="_blank" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg">
-        <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp ग्रुप में अभी जुड़ें
-      </a>
-      <button onclick="closeRedirectModal()" class="text-xs text-slate-400 hover:text-white underline">
-        माय लाइब्रेरी (My Courses) में जाएं
-      </button>
-    </div>
-  </div>
-
-  <!-- Secret Owner Gmail Verification Modal (Hidden from Customers) -->
-  <div id="ownerAuthModal" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
-        <h3 class="text-sm font-extrabold text-amber-400 flex items-center gap-2">
-          <i class="fa-solid fa-lock"></i> Owner Gmail Verification
-        </h3>
-        <button onclick="closeOwnerAuth()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <p class="text-[11px] text-slate-400">
-        यह पैनल ग्राहकों के लिए लॉक है। केवल वेबसाइट के मालिक अपनी रजिस्टर्ड Gmail ID और मास्टर पासवर्ड से इसे खोल सकते हैं।
-      </p>
-      <div class="space-y-2.5">
-        <input id="authGmailInput" type="email" placeholder="अपनी Owner Gmail ID डालें *" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white" />
-        <input id="authPassInput" type="password" placeholder="Owner Master Password डालें *" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white" />
-      </div>
-      <button onclick="verifyOwnerCredentials()" class="w-full gradient-btn text-white font-extrabold text-xs py-3 rounded-xl shadow">
-        Verify & Unlock Owner Panel
-      </button>
-    </div>
-  </div>
-
-  <!-- Hidden Owner Admin Control Panel Modal -->
-  <div id="adminModal" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-5 space-y-5 max-h-[92vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div>
-          <h3 class="text-base sm:text-lg font-extrabold text-amber-400 flex items-center gap-2">
-            <i class="fa-solid fa-user-shield"></i> प्राइवेट ओनर कंट्रोल पैनल (Customers से छुपा हुआ)
-          </h3>
-          <p class="text-[11px] text-slate-400">यहाँ बदलाव करने के बाद नीचे हरे बटन से नई <code class="text-emerald-400">index.html</code> डाउनलोड करके GitHub में अपलोड करें ताकि बदलाव सबके फोन में परमानेंट लॉक हो जाएं।</p>
-        </div>
-        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <!-- Permanent Master Publish Button -->
-      <div class="bg-emerald-950/60 border border-emerald-500/40 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div class="text-xs space-y-0.5">
-          <div class="font-extrabold text-emerald-300">ग्राहकों के लिए परमानेंट लॉक के साथ पब्लिश करें</div>
-          <div class="text-slate-300">आपने जो कोर्सेज, UPI ID और Owner Gmail सेट किया है, उसे कोड में लॉक करके नई फाइल डाउनलोड करें:</div>
-        </div>
-        <button onclick="downloadLockedHtmlFile()" class="shrink-0 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-1.5">
-          <i class="fa-solid fa-download"></i> अपडेटेड index.html डाउनलोड करें
-        </button>
-      </div>
-
-      <!-- Brand, Owner Gmail, UPI & APK Link Settings -->
-      <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
-        <h4 class="text-xs font-bold text-amber-300 uppercase">1. आपकी Owner Gmail, कंपनी का नाम, UPI ID और APK लिंक</h4>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input id="admOwnerGmail" type="email" placeholder="आपकी Owner Gmail ID (सिर्फ इसी से पैनल खुलेगा)" class="bg-slate-900 border border-amber-500/50 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="admOwnerPass" type="text" placeholder="आपका नया Master Password" class="bg-slate-900 border border-amber-500/50 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="admBrandName" type="text" placeholder="कंपनी / ऐप का नाम" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="admUpiId" type="text" placeholder="आपकी UPI ID (जैसे name@ybl)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="admWhatsapp" type="text" placeholder="आपका WhatsApp नंबर (919999999999)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="admApkUrl" type="text" placeholder="APK Download Link (Google Drive / GitHub APK URL)" class="bg-slate-900 border border-emerald-500/50 rounded-xl px-3 py-2 text-xs text-white" />
-        </div>
-        <button onclick="saveAdminSettings()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl">
-          सेटिंग्स सेव करें
-        </button>
-      </div>
-
-      <!-- Add / Delete Courses -->
-      <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
-        <div class="flex items-center justify-between">
-          <h4 class="text-xs font-bold text-emerald-400 uppercase">2. नया कोर्स या ई-बुक जोड़ें</h4>
-          <button onclick="clearAllCourses()" class="text-[11px] bg-red-500/20 text-red-300 border border-red-500/40 px-2.5 py-1 rounded-lg">
-            सभी सैंपल कोर्स हटाएं
-          </button>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <input id="newTitle" type="text" placeholder="कोर्स / ई-बुक का नाम *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="newPrice" type="number" placeholder="कीमत (₹) जैसे 499 *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="newBadge" type="text" placeholder="ऑफर बैज (जैसे 70% OFF / Bestseller)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="newValidity" type="text" placeholder="वैलिडिटी (जैसे 1 Year Access)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="newWaGroup" type="url" placeholder="उस कोर्स का WhatsApp Group Link *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-          <input id="newDriveLink" type="url" placeholder="कोर्स वीडियो / ई-बुक एक्सेस लिंक *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-        </div>
-        <textarea id="newDesc" rows="2" placeholder="कोर्स के बारे में संक्षिप्त जानकारी..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></textarea>
-        <button onclick="addNewCourse()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl">
-          + कोर्स लिस्ट में जोड़ें
-        </button>
-
-        <!-- Existing Courses Delete List -->
-        <div id="adminCourseList" class="pt-3 border-t border-slate-800 space-y-2"></div>
-      </div>
-
-      <!-- Orders Excel Export & 1-Year Lock Control -->
-      <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <h4 class="text-xs font-bold text-sky-400 uppercase">3. पेमेंट रिकॉर्ड्स, Excel Sheet और 1-साल लॉक कंट्रोल</h4>
-          <button onclick="exportOrdersCsv()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs px-3.5 py-1.5 rounded-xl flex items-center gap-1.5">
-            <i class="fa-solid fa-file-excel"></i> Excel Sheet डाउनलोड करें (.CSV)
-          </button>
-        </div>
-        <div id="adminOrdersTable" class="text-xs text-slate-300 space-y-2 max-h-48 overflow-y-auto"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom Mobile App Navigation Bar (Only Customer Tabs) -->
-  <nav class="fixed bottom-0 inset-x-0 z-40 glass border-t border-slate-800 px-2 py-2 flex items-center justify-around">
-    <button onclick="switchTab('home')" class="flex flex-col items-center text-amber-400 text-[11px] font-bold">
-      <i class="fa-solid fa-house text-base"></i><span>Home</span>
-    </button>
-    <button onclick="switchTab('courses')" class="flex flex-col items-center text-slate-300 hover:text-amber-400 text-[11px] font-bold">
-      <i class="fa-solid fa-book-open text-base"></i><span>Courses</span>
-    </button>
-    <button onclick="switchTab('videos')" class="flex flex-col items-center text-slate-300 hover:text-amber-400 text-[11px] font-bold">
-      <i class="fa-brands fa-youtube text-base text-red-500"></i><span>Free Videos</span>
-    </button>
-    <button onclick="switchTab('library')" class="flex flex-col items-center text-slate-300 hover:text-amber-400 text-[11px] font-bold">
-      <i class="fa-solid fa-user-graduate text-base"></i><span>My Library</span>
-    </button>
-    <button onclick="scrollToApkSection()" class="flex flex-col items-center text-emerald-400 text-[11px] font-bold">
-      <i class="fa-brands fa-android text-base"></i><span>Get APK</span>
-    </button>
-  </nav>
-
-  <script>
-    /*__LOCKED_CONFIG_START__*/
-    const DEFAULT_SETTINGS = {
-      ownerGmail: 'owner@gmail.com',
-      ownerPass: 'Krish@2026',
-      brandName: 'सीखो डिजिटल',
-      upiId: 'seekhodigital@ybl',
-      whatsapp: '919999999999',
-      apkUrl: ''
-    };
-
-    const DEFAULT_COURSES = [
-      {
-        id: 'c1',
-        title: 'Full Digital Marketing & Affiliate Mastery 2026',
-        price: 499,
-        badge: '80% OFF • Bestseller',
-        validity: '1 Year Access (365 Days)',
-        desc: 'Zero se apna online business, affiliate marketing aur social media ads chalana seekhein.',
-        waGroup: 'https://chat.whatsapp.com/sample-group-link-1',
-        driveLink: 'https://drive.google.com/sample-course-1',
-        thumb: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80'
-      },
-      {
-        id: 'c2',
-        title: 'AI Tools & YouTube Automation Complete E-Book + Video Bundle',
-        price: 299,
-        badge: 'Hot Offer',
-        validity: '1 Year Access (365 Days)',
-        desc: 'Bina chehra dikhaye YouTube channel automation aur AI video editing ka complete blueprint.',
-        waGroup: 'https://chat.whatsapp.com/sample-group-link-2',
-        driveLink: 'https://drive.google.com/sample-course-2',
-        thumb: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=80'
-      },
-      {
-        id: 'c3',
-        title: 'E-Commerce & WhatsApp Sales Funnel Blueprint',
-        price: 399,
-        badge: 'Popular',
-        validity: '1 Year Access (365 Days)',
-        desc: 'अपने डिजिटल या फिजिकल प्रोडक्ट्स को WhatsApp और ऑटोमेशन से बेचने का पूरा सिस्टम।',
-        waGroup: 'https://chat.whatsapp.com/sample-group-link-3',
-        driveLink: 'https://drive.google.com/sample-course-3',
-        thumb: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80'
-      }
-    ];
-    /*__LOCKED_CONFIG_END__*/
-
-    let settings = JSON.parse(localStorage.getItem('sd_owner_settings_v2')) || DEFAULT_SETTINGS;
-    let courses = JSON.parse(localStorage.getItem('sd_owner_courses_v2')) || DEFAULT_COURSES;
-
-    let freeVideos = [
-      {
-        title: 'Free Demo Class: Online Digital Business Kaise Shuru Karein',
-        ytId: 'dQw4w9WgXcQ',
-        tag: 'Lifetime Free YouTube Access'
-      },
-      {
-        title: 'WhatsApp Par Courses & E-Books Sell Karne Ka Live Tarika',
-        ytId: 'M7lc1UVf-VE',
-        tag: 'No Subscription Needed'
-      }
-    ];
-
-    let orders = JSON.parse(localStorage.getItem('sd_orders')) || [];
-    let currentCourse = null;
-
-    // Secret 5-Tap Logo Trigger or ?admin=owner URL check
-    let tapCount = 0;
-    let tapTimer = null;
-    function secretOwnerTap() {
-      tapCount++;
-      clearTimeout(tapTimer);
-      tapTimer = setTimeout(() => { tapCount = 0; }, 1800);
-      if (tapCount >= 5) {
-        tapCount = 0;
-        openOwnerAuthModal();
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('admin') === 'owner') {
-        openOwnerAuthModal();
-      }
-    });
-
-    function openOwnerAuthModal() {
-      document.getElementById('authGmailInput').value = '';
-      document.getElementById('authPassInput').value = '';
-      document.getElementById('ownerAuthModal').classList.remove('hidden');
-      document.getElementById('ownerAuthModal').classList.add('flex');
-    }
-
-    function closeOwnerAuth() {
-      document.getElementById('ownerAuthModal').classList.add('hidden');
-      document.getElementById('ownerAuthModal').classList.remove('flex');
-    }
-
-    function verifyOwnerCredentials() {
-      const enteredEmail = document.getElementById('authGmailInput').value.trim().toLowerCase();
-      const enteredPass = document.getElementById('authPassInput').value.trim();
-
-      // First-time setup: if ownerGmail is still default 'owner@gmail.com', allow setting their own Gmail with default password
-      const allowedEmail = (settings.ownerGmail || 'owner@gmail.com').toLowerCase();
-      const allowedPass = settings.ownerPass || 'Krish@2026';
-
-      if (
-        (allowedEmail === 'owner@gmail.com' || enteredEmail === allowedEmail) &&
-        enteredPass === allowedPass &&
-        enteredEmail.endsWith('@gmail.com')
-      ) {
-        if (allowedEmail === 'owner@gmail.com') {
-          settings.ownerGmail = enteredEmail;
-          localStorage.setItem('sd_owner_settings_v2', JSON.stringify(settings));
+        // Load courses & config from localStorage or embedded data
+        function loadConfig() {
+            const saved = localStorage.getItem('sikho_config_v4');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && Array.isArray(parsed.courses) && parsed.courses.length > 0) {
+                        window.SIKHO_CONFIG = parsed;
+                    }
+                } catch (e) {}
+            }
         }
-        closeOwnerAuth();
-        openAdminPanelVerified();
-      } else {
-        alert('Access Denied! केवल वेबसाइट के मालिक की रजिस्टर्ड Gmail ID और सही मास्टर पासवर्ड से ही यह पैनल खुल सकता है।');
-      }
-    }
-
-    // 10 Indian Languages Dictionary
-    const translations = {
-      hi: {
-        heroTitle: 'प्रीमियम वीडियो कोर्सेज और ई-बुक्स अब एक ही ऐप में',
-        heroSub: 'पेमेंट पूरा होते ही सीधा ऑफिशियल WhatsApp ग्रुप में जुड़ें और 1 साल या लाइफटाइम वैलिडिटी के साथ कभी भी पढ़ाई करें।',
-        coursesHeading: 'हमारे प्रीमियम कोर्सेज और ई-बुक्स',
-        buyBtn: 'अभी खरीदें (UPI / QR)'
-      },
-      en: {
-        heroTitle: 'Premium Video Courses & E-Books in One Super App',
-        heroSub: 'Join the official WhatsApp group immediately after UPI payment and learn with 1-Year validity.',
-        coursesHeading: 'Our Premium Courses & E-Books',
-        buyBtn: 'Buy Now (UPI / QR)'
-      },
-      mr: {
-        heroTitle: 'प्रीमियम व्हिडिओ कोर्सेस आणि ई-बुक्स आता एकाच ॲपमध्ये',
-        heroSub: 'UPI पेमेंट पूर्ण होताच थेट अधिकृत WhatsApp ग्रुपमध्ये सामील व्हा आणि १ वर्ष शिकत राहा.',
-        coursesHeading: 'आमचे प्रीमियम कोर्सेस आणि ई-बुक्स',
-        buyBtn: 'आताच खरेदी करा (UPI / QR)'
-      },
-      te: {
-        heroTitle: 'ప్రీమియం వీడియో కోర్సులు & ఈ-బుక్స్ ఒకే యాప్‌లో',
-        heroSub: 'UPI పేమెంట్ పూర్తయిన వెంటనే అధికారిక WhatsApp గ్రూప్‌లో చేరండి.',
-        coursesHeading: 'మా ప్రీమియం కోర్సులు & ఈ-బుక్స్',
-        buyBtn: 'ఇప్పుడే కొనండి (UPI / QR)'
-      },
-      ta: {
-        heroTitle: 'பிரீமியம் வீடியோ படிப்புகள் & மின் புத்தகங்கள் ஒரே செயலியில்',
-        heroSub: 'UPI கட்டணம் முடிந்தவுடன் அதிகாரப்பூர்வ WhatsApp குழுவில் இணையுங்கள்.',
-        coursesHeading: 'எங்கள் பிரீமியம் படிப்புகள்',
-        buyBtn: 'இப்போதே வாங்குங்கள் (UPI / QR)'
-      },
-      bn: {
-        heroTitle: 'প্রিমিয়াম ভিডিও কোর্স এবং ই-বুক এখন একই অ্যাপে',
-        heroSub: 'UPI পেমেন্ট সম্পন্ন হলেই সরাসরি অফিসিয়াল WhatsApp গ্রুপে যুক্ত হোন।',
-        coursesHeading: 'আমাদের প্রিমিয়াম কোর্স ও ই-বুক',
-        buyBtn: 'এখনই কিনুন (UPI / QR)'
-      },
-      gu: {
-        heroTitle: 'પ્રીમિયમ વિડિયો કોર્સ અને ઈ-બુક્સ હવે એક જ એપમાં',
-        heroSub: 'UPI પેમેન્ટ પૂર્ણ થતાં જ સીધા સત્તાવાર WhatsApp ગ્રુપમાં જોડાઓ.',
-        coursesHeading: 'અમારા પ્રીમિયમ કોર્સ અને ઈ-બુક્સ',
-        buyBtn: 'અત્યારે જ ખરીદો (UPI / QR)'
-      },
-      kn: {
-        heroTitle: 'ಪ್ರೀಮಿಯಂ ವಿಡಿಯೋ ಕೋರ್ಸ್‌ಗಳು ಮತ್ತು ಇ-ಬುಕ್ಸ್ ಒಂದೇ ಆಪ್‌ನಲ್ಲಿ',
-        heroSub: 'UPI ಪಾವತಿ పూర్తಾದ ತಕ್ಷಣ ಅಧಿಕೃತ WhatsApp ಗ್ರೂಪ್‌ಗೆ ಸೇರಿಕೊಳ್ಳಿ.',
-        coursesHeading: 'ನಮ್ಮ ಪ್ರೀಮಿಯಂ ಕೋರ್ಸ್‌ಗಳು',
-        buyBtn: 'ಈಗಲೇ ಖರೀದಿಸಿ (UPI / QR)'
-      },
-      ml: {
-        heroTitle: 'പ്രീമിയം വീഡിയോ കോഴ്സുകളും ഇ-ബുക്കുകളും ഒരൊറ്റ ആപ്പിൽ',
-        heroSub: 'UPI പേയ്‌മെന്റ് കഴിഞ്ഞാലുടൻ ഔദ്യോഗിക WhatsApp ഗ്രൂപ്പിൽ ചേരുക.',
-        coursesHeading: 'ഞങ്ങളുടെ പ്രീമിയം കോഴ്സുകൾ',
-        buyBtn: 'ഇപ്പോൾ വാങ്ങുക (UPI / QR)'
-      },
-      pa: {
-        heroTitle: 'ਪ੍ਰੀਮੀਅਮ ਵੀਡੀਓ ਕੋਰਸ ਅਤੇ ਈ-ਬੁੱਕਸ ਹੁਣ ਇੱਕੋ ਐਪ ਵਿੱਚ',
-        heroSub: 'UPI ਪੇਮੈਂਟ ਪੂਰੀ ਹੁੰਦੇ ਹੀ ਸਿੱਧਾ ਅਧਿਕਾਰਤ WhatsApp ਗਰੁੱਪ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ।',
-        coursesHeading: 'ਸਾਡੇ ਪ੍ਰੀਮੀਅਮ ਕੋਰਸ ਅਤੇ ਈ-ਬੁੱਕਸ',
-        buyBtn: 'ਹੁਣੇ ਖਰੀਦੋ (UPI / QR)'
-      }
-    };
-    let currentLang = 'hi';
-
-    function setLang(lang) {
-      currentLang = lang;
-      const t = translations[lang] || translations.hi;
-      document.getElementById('heroTitle').innerText = t.heroTitle;
-      document.getElementById('heroSub').innerText = t.heroSub;
-      document.getElementById('coursesHeading').innerText = t.coursesHeading;
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        if (btn.dataset.lang === lang) {
-          btn.className = 'lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-slate-950';
-        } else {
-          btn.className = 'lang-btn shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300';
+        function saveConfig() {
+            localStorage.setItem('sikho_config_v4', JSON.stringify(window.SIKHO_CONFIG));
         }
-      });
-      renderCourses();
-    }
 
-    function applyBrandSettings() {
-      document.getElementById('brandNameDisplay').innerText = settings.brandName;
-      document.getElementById('legalBrandName').innerText = settings.brandName;
-      document.getElementById('footerBrand').innerText = settings.brandName;
-      document.getElementById('footerWa').innerText = '+' + settings.whatsapp;
-    }
+        // Deterministic Course-Specific Unlock PIN (Works ONLY for that student phone + that specific course ID)
+        function generateCourseSpecificPin(phone, courseId) {
+            const cleanPhone = (phone || '').replace(/\D/g, '').slice(-10);
+            const cleanCourse = (courseId || '').toUpperCase().trim();
+            let hash = 2166136261;
+            const str = cleanPhone + "::" + cleanCourse + "::SIKHO2026";
+            for (let i = 0; i < str.length; i++) {
+                hash ^= str.charCodeAt(i);
+                hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+            }
+            const codeNum = Math.abs(hash % 900000) + 100000;
+            return `${cleanCourse}-${codeNum}`;
+        }
 
-    function renderCourses() {
-      const grid = document.getElementById('coursesGrid');
-      const buyLabel = (translations[currentLang] || translations.hi).buyBtn;
-      if (courses.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-400 text-sm">जल्द ही नए कोर्सेज अपलोड किए जाएंगे।</div>`;
-        return;
-      }
-      grid.innerHTML = courses.map(c => `
-        <div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col justify-between shadow-lg">
-          <div>
-            <div class="relative h-44 bg-slate-950">
-              <img src="${c.thumb || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80'}" alt="Course Thumbnail" class="w-full h-full object-cover" />
-              <span class="absolute top-3 left-3 bg-amber-500 text-slate-950 font-extrabold text-[11px] px-2.5 py-1 rounded-full shadow">${c.badge || 'Special Offer'}</span>
-              <span class="absolute bottom-2 right-2 bg-slate-950/90 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-500/30">${c.validity || '1 Year Access'}</span>
-            </div>
-            <div class="p-4 space-y-2">
-              <h4 class="font-extrabold text-white text-base leading-snug">${c.title}</h4>
-              <p class="text-xs text-slate-400">${c.desc}</p>
-            </div>
-          </div>
-          <div class="p-4 pt-0 flex items-center justify-between border-t border-slate-800/80 mt-2">
-            <div>
-              <span class="text-[11px] text-slate-400 block">ऑफर प्राइस</span>
-              <span class="text-xl font-extrabold text-emerald-400">₹${c.price}</span>
-            </div>
-            <button onclick="openCheckout('${c.id}')" class="gradient-btn text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow">
-              ${buyLabel}
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
+        function scrollToCatalog(cat) {
+            switchCatalogCategory(cat);
+            document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
+        }
 
-    function renderFreeVideos() {
-      const grid = document.getElementById('freeVideosGrid');
-      grid.innerHTML = freeVideos.map(v => `
-        <div class="rounded-2xl bg-slate-900 border border-slate-800 p-4 space-y-3">
-          <div class="aspect-video rounded-xl overflow-hidden bg-black">
-            <iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.ytId}" title="${v.title}" allowfullscreen></iframe>
-          </div>
-          <div class="flex items-center justify-between">
-            <h4 class="text-sm font-bold text-white">${v.title}</h4>
-            <span class="text-[10px] bg-red-500/20 text-red-300 border border-red-500/30 px-2 py-0.5 rounded-full shrink-0">${v.tag}</span>
-          </div>
-        </div>
-      `).join('');
-    }
+        function switchCatalogCategory(cat) {
+            activeCatalogCategory = cat;
+            const tabVideo = document.getElementById('tab-video');
+            const tabEbook = document.getElementById('tab-ebook');
+            const tabAll = document.getElementById('tab-all');
 
-    function openCheckout(courseId) {
-      currentCourse = courses.find(c => c.id === courseId);
-      if (!currentCourse) return;
-      document.getElementById('chkCourseTitle').innerText = currentCourse.title;
-      document.getElementById('orderBumpChk').checked = false;
-      updateCheckoutTotal();
-      document.getElementById('checkoutModal').classList.remove('hidden');
-      document.getElementById('checkoutModal').classList.add('flex');
-    }
+            const activeVideoClass = "flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl font-extrabold text-xs sm:text-sm bg-gradient-to-r from-rose-600 to-orange-600 text-white shadow-lg shadow-rose-600/30 scale-[1.02] transition-all";
+            const activeEbookClass = "flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl font-extrabold text-xs sm:text-sm bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-600/30 scale-[1.02] transition-all";
+            const activeAllClass = "col-span-2 sm:col-span-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-extrabold text-xs sm:text-sm bg-indigo-600 text-white shadow-lg transition-all";
+            const inactiveClass = "flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl font-bold text-xs sm:text-sm bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-all";
 
-    function closeCheckout() {
-      document.getElementById('checkoutModal').classList.add('hidden');
-      document.getElementById('checkoutModal').classList.remove('flex');
-    }
+            tabVideo.className = cat === 'video' ? activeVideoClass : inactiveClass;
+            tabEbook.className = cat === 'ebook' ? activeEbookClass : inactiveClass;
+            tabAll.className = cat === 'all' ? activeAllClass : "col-span-2 sm:col-span-1 " + inactiveClass;
 
-    function updateCheckoutTotal() {
-      const bump = document.getElementById('orderBumpChk').checked ? 99 : 0;
-      const total = Number(currentCourse.price) + bump;
-      document.getElementById('chkTotalAmount').innerText = '₹' + total;
-      document.getElementById('displayUpiId').innerText = settings.upiId;
-      const upiUri = `upi://pay?pa=${encodeURIComponent(settings.upiId)}&pn=${encodeURIComponent(settings.brandName)}&am=${total}&cu=INR&tn=${encodeURIComponent(currentCourse.title)}`;
-      document.getElementById('upiIntentBtn').href = upiUri;
-      document.getElementById('upiQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUri)}`;
-    }
+            const heading = document.getElementById('catalogHeading');
+            const sub = document.getElementById('catalogSubheading');
+            if (cat === 'video') {
+                heading.innerHTML = '🎬 प्रीमियम Video Courses (HD प्रैक्टिकल ट्रेनिंग)';
+                sub.textContent = 'YouTube-स्टाइल हाई-क्वालिटी वीडियो लेसन्स, लाइव स्क्रीन रिकॉर्डिंग और सर्टिफिकेट';
+            } else if (cat === 'ebook') {
+                heading.innerHTML = '📚 डिजिटल E-Books & PDF कोर्सेज (3D Book Edition)';
+                sub.textContent = 'आसान हिंदी में स्टेप-बाय-स्टेप डिजिटल किताबें, रेडीमेड प्रॉम्प्ट्स और लाइफटाइम PDF एक्सेस';
+            } else {
+                heading.innerHTML = '🌟 सभी Video Courses और Digital E-Books';
+                sub.textContent = 'अपनी पसंद का वीडियो कोर्स या ई-बुक चुनें और तुरंत सीखना शुरू करें';
+            }
+            renderCatalog();
+        }
 
-    function verifyAndCompletePayment() {
-      const name = document.getElementById('buyerName').value.trim();
-      const mobile = document.getElementById('buyerMobile').value.trim();
-      const email = document.getElementById('buyerEmail').value.trim();
-      const utr = document.getElementById('buyerUtr').value.trim();
+        // Render Main Catalog (Distinct Look for Video Thumbnail vs 3D Thick E-Book Cover)
+        function renderCatalog() {
+            const courses = window.SIKHO_CONFIG.courses || [];
+            const videoCount = courses.filter(c => c.category === 'video').length;
+            const ebookCount = courses.filter(c => c.category === 'ebook').length;
+            document.getElementById('count-video').textContent = videoCount;
+            document.getElementById('count-ebook').textContent = ebookCount;
+            document.getElementById('count-all').textContent = courses.length;
 
-      if (!name || !/^\d{10}$/.test(mobile) || !email) {
-        alert('कृपया अपना सही नाम, 10 अंकों का WhatsApp नंबर और ईमेल भरें।');
-        return;
-      }
-      if (!/^\d{12}$/.test(utr)) {
-        alert('सुरक्षा कारणों से कृपया पेमेंट का सही 12-अंकों वाला UPI UTR / Reference नंबर डालें।');
-        return;
-      }
-      if (orders.some(o => o.utr === utr)) {
-        alert('यह UTR नंबर पहले ही उपयोग किया जा चुका है!');
-        return;
-      }
+            const q = (document.getElementById('catalogSearch').value || '').toLowerCase().trim();
+            const filtered = courses.filter(c => {
+                const matchCat = activeCatalogCategory === 'all' || c.category === activeCatalogCategory;
+                const matchQ = !q || c.title.toLowerCase().includes(q) || (c.description || '').toLowerCase().includes(q);
+                return matchCat && matchQ;
+            });
 
-      const bump = document.getElementById('orderBumpChk').checked ? 99 : 0;
-      const total = Number(currentCourse.price) + bump;
-      const now = new Date();
-      const expiry = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+            const grid = document.getElementById('catalogGrid');
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+                    <p class="text-slate-300 font-bold text-base">इस कैटेगरी में अभी कोई कोर्स नहीं मिला।</p>
+                    <p class="text-xs text-slate-400 mt-1">ऊपर दूसरी टैब (Video Courses / E-Books) पर क्लिक करें।</p>
+                </div>`;
+                return;
+            }
 
-      const newOrder = {
-        orderId: 'ORD' + Date.now(),
-        name,
-        mobile,
-        email,
-        utr,
-        courseId: currentCourse.id,
-        courseTitle: currentCourse.title,
-        amount: total,
-        waGroup: currentCourse.waGroup,
-        driveLink: currentCourse.driveLink,
-        purchaseDate: now.toISOString(),
-        expiryDate: expiry.toISOString(),
-        locked: false
-      };
+            grid.innerHTML = filtered.map(c => {
+                const isEbook = c.category === 'ebook';
+                const gradient = c.coverColor || (isEbook ? 'from-emerald-600 via-teal-700 to-cyan-800' : 'from-indigo-600 via-purple-600 to-pink-600');
 
-      orders.unshift(newOrder);
-      localStorage.setItem('sd_orders', JSON.stringify(orders));
+                // Visual Header: 3D Thick Digital Book for E-Books vs Widescreen YouTube-style Thumbnail for Video Courses
+                let mediaHeader = '';
+                if (isEbook) {
+                    mediaHeader = `
+                    <div class="relative bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800/80 overflow-hidden">
+                        <span class="absolute top-3 left-3 z-20 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[11px] font-extrabold">
+                            📚 DIGITAL E-BOOK (PDF)
+                        </span>
+                        <span class="absolute top-3 right-3 z-20 px-2.5 py-1 rounded-full bg-amber-500 text-slate-950 text-[11px] font-extrabold shadow">
+                            ${c.discountPercent}% OFF
+                        </span>
+                        <div class="ebook-3d-wrap">
+                            <div class="ebook-3d-book bg-gradient-to-br ${gradient} p-3.5 flex flex-col justify-between text-white overflow-hidden">
+                                ${c.coverImage ? `<img src="${c.coverImage}" alt="${c.title}" class="absolute inset-0 w-full h-full object-cover opacity-90">` : ''}
+                                <div class="relative z-10 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider bg-black/40 px-2 py-0.5 rounded">
+                                    <span>SikhoDigital</span>
+                                    <span>PDF BOOK</span>
+                                </div>
+                                <div class="relative z-10 my-auto py-2 px-1 text-center bg-black/45 backdrop-blur-[2px] rounded-lg border border-white/15">
+                                    <div class="text-xs sm:text-sm font-extrabold leading-snug drop-shadow">${c.title}</div>
+                                </div>
+                                <div class="relative z-10 flex items-center justify-between text-[10px] bg-black/50 px-2 py-1 rounded font-semibold">
+                                    <span><i class="fa-solid fa-file-pdf text-amber-300 mr-1"></i>${c.duration || 'PDF Guide'}</span>
+                                    <span>★ 4.9</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                } else {
+                    mediaHeader = `
+                    <div class="relative h-48 bg-gradient-to-br ${gradient} overflow-hidden flex items-center justify-center">
+                        ${c.coverImage ? `<img src="${c.coverImage}" alt="${c.title}" class="absolute inset-0 w-full h-full object-cover">` : ''}
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-transparent"></div>
+                        <span class="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full bg-rose-600 text-white text-[11px] font-extrabold shadow">
+                            🎬 VIDEO COURSE
+                        </span>
+                        <span class="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full bg-amber-400 text-slate-950 text-[11px] font-extrabold shadow">
+                            ${c.discountPercent}% OFF
+                        </span>
+                        <!-- Center Play Button -->
+                        <div class="relative z-10 w-14 h-14 rounded-full bg-rose-600/95 text-white flex items-center justify-center play-pulse shadow-xl">
+                            <i class="fa-solid fa-play text-xl ml-1"></i>
+                        </div>
+                        <!-- Thumbnail Title Overlay -->
+                        <div class="absolute bottom-2.5 left-3 right-3 z-10 flex items-center justify-between text-xs text-white">
+                            <span class="font-bold bg-black/60 px-2.5 py-1 rounded-lg backdrop-blur-sm"><i class="fa-solid fa-clock text-amber-400 mr-1"></i>${c.duration || 'HD Video'}</span>
+                            <span class="font-bold bg-black/60 px-2.5 py-1 rounded-lg backdrop-blur-sm">${(c.modules || []).length} Modules</span>
+                        </div>
+                    </div>`;
+                }
 
-      closeCheckout();
-      document.getElementById('redCourseName').innerText = newOrder.courseTitle;
-      document.getElementById('redUtr').innerText = newOrder.utr;
-      document.getElementById('redWhatsappGroupBtn').href = newOrder.waGroup;
-      document.getElementById('redirectModal').classList.remove('hidden');
-      document.getElementById('redirectModal').classList.add('flex');
-    }
+                const highlightsHtml = (c.highlights || []).slice(0, 3).map(h =>
+                    `<li class="flex items-center gap-2 text-xs text-slate-300"><i class="fa-solid fa-circle-check text-emerald-400 shrink-0"></i><span>${h}</span></li>`
+                ).join('');
 
-    function closeRedirectModal() {
-      document.getElementById('redirectModal').classList.add('hidden');
-      document.getElementById('redirectModal').classList.remove('flex');
-      switchTab('library');
-    }
+                return `
+                <div class="group bg-slate-900 border border-slate-800 hover:border-indigo-500/60 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1">
+                    <div>
+                        ${mediaHeader}
+                        <div class="p-5 space-y-3">
+                            <div class="flex items-center justify-between text-[11px] text-slate-400">
+                                <span class="font-mono text-indigo-400 font-bold">ID: ${c.id}</span>
+                                <span class="px-2 py-0.5 rounded bg-slate-800 text-amber-300 font-semibold">${c.badge || 'PREMIUM'}</span>
+                            </div>
+                            <h3 class="text-base sm:text-lg font-extrabold text-white leading-snug">${c.title}</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">${c.description || ''}</p>
+                            <ul class="space-y-1.5 pt-1 border-t border-slate-800/80">${highlightsHtml}</ul>
+                        </div>
+                    </div>
 
-    function studentLogin() {
-      const mob = document.getElementById('stuMobile').value.trim();
-      const em = document.getElementById('stuEmail').value.trim().toLowerCase();
-      const vault = document.getElementById('studentVault');
-      vault.classList.remove('hidden');
+                    <div class="p-5 pt-0">
+                        <div class="flex items-end justify-between bg-slate-950 border border-slate-800 rounded-xl p-3 mb-3">
+                            <div>
+                                <div class="text-[11px] text-slate-400 line-through">MRP: ₹${c.mrp}</div>
+                                <div class="text-xl font-extrabold text-emerald-400">₹${c.price} <span class="text-[11px] font-normal text-slate-400">${c.gstMode === 'extra' ? '+ 18% GST' : '(All Inclusive)'}</span></div>
+                            </div>
+                            <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg">Save ₹${Math.max(0, c.mrp - c.price)}</span>
+                        </div>
+                        <button onclick="openCheckoutModal('${c.id}')" class="w-full py-3 rounded-xl font-extrabold text-xs sm:text-sm text-white shadow-lg transition flex items-center justify-center gap-2 ${isEbook ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500' : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500'}">
+                            <span>${isEbook ? '📚 अभी ई-बुक (PDF) खरीदें' : '🎬 अभी वीडियो कोर्स जॉइन करें'}</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
 
-      const myOrders = orders.filter(o => o.mobile === mob || o.email.toLowerCase() === em);
-      if (myOrders.length === 0) {
-        vault.innerHTML = `<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-amber-300">इस मोबाइल नंबर या ईमेल से अभी कोई खरीदा हुआ कोर्स नहीं मिला।</div>`;
-        return;
-      }
+        // Checkout & Coupon Logic (30% Referral Discount or 50% Next-Course Reward Code)
+        function openCheckoutModal(courseId) {
+            const course = (window.SIKHO_CONFIG.courses || []).find(c => c.id === courseId);
+            if (!course) return;
+            currentCheckoutCourse = course;
+            appliedCouponDiscount = 0;
+            appliedReferrerPhone = "";
 
-      vault.innerHTML = myOrders.map(o => {
-        const daysLeft = Math.max(0, Math.ceil((new Date(o.expiryDate) - new Date()) / (1000 * 60 * 60 * 24)));
-        const isLocked = o.locked || daysLeft <= 0;
-        return `
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div>
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded ${isLocked ? 'bg-red-500/20 text-red-300' : 'bg-emerald-500/20 text-emerald-300'}">
-                ${isLocked ? 'एक्सेस समाप्त / ऑटो-लॉक (1 साल पूरा)' : `एक्टिव • ${daysLeft} दिन शेष`}
-              </span>
-              <h5 class="text-sm font-extrabold text-white mt-1">${o.courseTitle}</h5>
-              <p class="text-[11px] text-slate-400">UTR: ${o.utr}</p>
-            </div>
-            ${isLocked ? `
-              <span class="text-xs text-red-400 font-bold"><i class="fa-solid fa-lock"></i> 1 साल पूरा होने के कारण कोर्स क्लोज हो चुका है</span>
-            ` : `
-              <div class="flex flex-wrap gap-2">
-                <a href="${o.waGroup}" target="_blank" class="bg-emerald-500 text-slate-950 font-bold text-xs px-3 py-2 rounded-lg">WhatsApp ग्रुप</a>
-                <a href="${o.driveLink}" target="_blank" class="bg-amber-500 text-slate-950 font-bold text-xs px-3 py-2 rounded-lg">कोर्स / ई-बुक खोलें</a>
-              </div>
-            `}
-          </div>
-        `;
-      }).join('');
-    }
+            // Auto-fill referral code if user came from a referral link (?ref=9876543210)
+            const urlParams = new URLSearchParams(window.location.search);
+            const refParam = urlParams.get('ref');
+            const stu = JSON.parse(localStorage.getItem('sikho_student_user') || 'null');
+            if (stu) {
+                document.getElementById('chkName').value = stu.name || '';
+                document.getElementById('chkPhone').value = stu.phone || '';
+            }
 
-    function downloadOfficialApk() {
-      if (settings.apkUrl && settings.apkUrl.trim() !== '') {
-        window.open(settings.apkUrl, '_blank');
-      } else {
-        alert('ऑफिशियल ऐप जल्द ही उपलब्ध होगा! तब तक आप अपने ब्राउज़र के "Add to Home Screen" विकल्प से इसे ऐप की तरह इस्तेमाल कर सकते हैं।');
-      }
-    }
+            if (refParam && (!stu || stu.phone !== refParam)) {
+                document.getElementById('chkCoupon').value = `REF-${refParam}`;
+                applyCheckoutCoupon();
+            } else {
+                document.getElementById('chkCoupon').value = '';
+                document.getElementById('couponStatusBadge').textContent = '';
+            }
 
-    function scrollToApkSection() {
-      document.getElementById('apkDownloadSection').scrollIntoView({ behavior: 'smooth' });
-    }
+            document.getElementById('displayUpiId').textContent = window.SIKHO_CONFIG.upiId || 'sikhodigital@upi';
+            document.getElementById('checkoutCourseSummary').innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">${course.category === 'ebook' ? '📚 E-Book (PDF)' : '🎬 Video Course'}</span>
+                        <h4 class="font-bold text-white text-sm mt-1">${course.title}</h4>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-slate-400 line-through">₹${course.mrp}</div>
+                        <div class="text-lg font-extrabold text-emerald-400">₹${course.price}</div>
+                    </div>
+                </div>`;
 
-    function switchTab(tab) {
-      const map = {
-        home: 'sec-home',
-        courses: 'sec-courses',
-        videos: 'sec-videos',
-        library: 'sec-library'
-      };
-      const el = document.getElementById(map[tab]);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
+            updateCheckoutPriceBreakdown();
+            document.getElementById('checkoutFormStep').classList.remove('hidden');
+            document.getElementById('checkoutSuccessStep').classList.add('hidden');
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
 
-    // Verified Owner Admin Panel Functions
-    function openAdminPanelVerified() {
-      document.getElementById('admOwnerGmail').value = settings.ownerGmail || 'owner@gmail.com';
-      document.getElementById('admOwnerPass').value = settings.ownerPass || 'Krish@2026';
-      document.getElementById('admBrandName').value = settings.brandName;
-      document.getElementById('admUpiId').value = settings.upiId;
-      document.getElementById('admWhatsapp').value = settings.whatsapp;
-      document.getElementById('admApkUrl').value = settings.apkUrl || '';
-      renderAdminCourseList();
-      renderAdminOrders();
-      document.getElementById('adminModal').classList.remove('hidden');
-      document.getElementById('adminModal').classList.add('flex');
-    }
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
 
-    function closeAdminModal() {
-      document.getElementById('adminModal').classList.add('hidden');
-      document.getElementById('adminModal').classList.remove('flex');
-    }
+        function applyCheckoutCoupon() {
+            const raw = (document.getElementById('chkCoupon').value || '').trim().toUpperCase();
+            const badge = document.getElementById('couponStatusBadge');
+            if (!raw) {
+                appliedCouponDiscount = 0;
+                badge.textContent = '';
+                updateCheckoutPriceBreakdown();
+                return;
+            }
+            if (raw.startsWith('NEXT50-')) {
+                appliedCouponDiscount = 50;
+                appliedReferrerPhone = "";
+                badge.textContent = '🎉 50% रिवॉर्ड कूपन लागू!';
+                badge.className = 'text-[11px] text-emerald-400 font-bold';
+            } else if (raw.startsWith('REF-') && raw.length >= 10) {
+                appliedCouponDiscount = 30;
+                appliedReferrerPhone = raw.replace('REF-', '').replace(/\D/g, '').slice(-10);
+                badge.textContent = '🎁 30% दोस्त रेफरल छूट लागू!';
+                badge.className = 'text-[11px] text-amber-300 font-bold';
+            } else {
+                appliedCouponDiscount = 0;
+                badge.textContent = '❌ अमान्य कोड';
+                badge.className = 'text-[11px] text-rose-400 font-bold';
+            }
+            updateCheckoutPriceBreakdown();
+        }
 
-    function saveAdminSettings() {
-      settings.ownerGmail = document.getElementById('admOwnerGmail').value.trim().toLowerCase() || 'owner@gmail.com';
-      settings.ownerPass = document.getElementById('admOwnerPass').value.trim() || 'Krish@2026';
-      settings.brandName = document.getElementById('admBrandName').value.trim() || 'सीखो डिजिटल';
-      settings.upiId = document.getElementById('admUpiId').value.trim() || 'seekhodigital@ybl';
-      settings.whatsapp = document.getElementById('admWhatsapp').value.trim() || '919999999999';
-      settings.apkUrl = document.getElementById('admApkUrl').value.trim();
-      localStorage.setItem('sd_owner_settings_v2', JSON.stringify(settings));
-      applyBrandSettings();
-      alert('आपकी Owner Gmail, पासवर्ड, UPI और ब्रांड सेटिंग्स सेव हो गईं! अब ऊपर हरे बटन से अपडेटेड index.html डाउनलोड करके GitHub में डालें।');
-    }
+        function updateCheckoutPriceBreakdown() {
+            if (!currentCheckoutCourse) return;
+            const base = Number(currentCheckoutCourse.price) || 0;
+            const discAmount = Math.round((base * appliedCouponDiscount) / 100);
+            const afterDisc = Math.max(0, base - discAmount);
+            const gstExtra = currentCheckoutCourse.gstMode === 'extra' ? Math.round(afterDisc * 0.18) : 0;
+            const finalPay = afterDisc + gstExtra;
+            currentCheckoutCourse._finalPay = finalPay;
 
-    function addNewCourse() {
-      const title = document.getElementById('newTitle').value.trim();
-      const price = Number(document.getElementById('newPrice').value);
-      const badge = document.getElementById('newBadge').value.trim() || 'Special Offer';
-      const validity = document.getElementById('newValidity').value.trim() || '1 Year Access (365 Days)';
-      const waGroup = document.getElementById('newWaGroup').value.trim();
-      const driveLink = document.getElementById('newDriveLink').value.trim();
-      const desc = document.getElementById('newDesc').value.trim() || 'प्रीमियम डिजिटल कोर्स और ई-बुक बंडल।';
+            document.getElementById('checkoutPriceBreakdown').innerHTML = `
+                <div class="flex justify-between text-slate-300"><span>कोर्स की ऑफर कीमत:</span><span>₹${base}</span></div>
+                ${appliedCouponDiscount > 0 ? `<div class="flex justify-between text-emerald-400 font-bold"><span>कूपन छूट (${appliedCouponDiscount}% OFF):</span><span>- ₹${discAmount}</span></div>` : ''}
+                ${gstExtra > 0 ? `<div class="flex justify-between text-slate-400"><span>+ 18% GST:</span><span>+ ₹${gstExtra}</span></div>` : ''}
+                <div class="flex justify-between text-sm font-extrabold text-white border-t border-slate-800 pt-1.5"><span>कुल देय राशि (Total Payable):</span><span class="text-emerald-400">₹${finalPay}</span></div>
+            `;
+        }
 
-      if (!title || !price || !waGroup || !driveLink) {
-        alert('कृपया कोर्स का नाम, कीमत, WhatsApp Group लिंक और कोर्स लिंक ज़रूर भरें।');
-        return;
-      }
+        function completePaymentAndGeneratePin() {
+            const name = (document.getElementById('chkName').value || '').trim();
+            const phone = (document.getElementById('chkPhone').value || '').replace(/\D/g, '').slice(-10);
+            const utr = (document.getElementById('chkUtr').value || '').trim();
 
-      courses.unshift({
-        id: 'c' + Date.now(),
-        title,
-        price,
-        badge,
-        validity,
-        waGroup,
-        driveLink,
-        desc
-      });
-      localStorage.setItem('sd_owner_courses_v2', JSON.stringify(courses));
-      renderCourses();
-      renderAdminCourseList();
-      alert('नया कोर्स जुड़ गया! इसे सभी ग्राहकों के मोबाइल में दिखाने के लिए ऊपर हरे बटन से अपडेटेड index.html डाउनलोड करके GitHub में अपलोड करें।');
-    }
+            if (!name || phone.length !== 10 || !utr) {
+                alert('कृपया अपना नाम, 10-अंकों का WhatsApp नंबर और UPI Transaction/UTR नंबर भरें।');
+                return;
+            }
 
-    function renderAdminCourseList() {
-      const box = document.getElementById('adminCourseList');
-      if (courses.length === 0) {
-        box.innerHTML = `<div class="text-xs text-slate-500">कोई कोर्स नहीं है।</div>`;
-        return;
-      }
-      box.innerHTML = courses.map((c, i) => `
-        <div class="flex items-center justify-between bg-slate-900 border border-slate-800 px-3 py-2 rounded-lg text-xs">
-          <span class="font-bold text-white">${c.title} (₹${c.price})</span>
-          <button onclick="deleteSingleCourse(${i})" class="text-red-400 hover:text-red-300 font-bold">डिलीट करें</button>
-        </div>
-      `).join('');
-    }
+            const course = currentCheckoutCourse;
+            const coursePin = generateCourseSpecificPin(phone, course.id);
 
-    function deleteSingleCourse(idx) {
-      courses.splice(idx, 1);
-      localStorage.setItem('sd_owner_courses_v2', JSON.stringify(courses));
-      renderCourses();
-      renderAdminCourseList();
-    }
+            // Auto-login student & store unlocked course PIN
+            localStorage.setItem('sikho_student_user', JSON.stringify({ name, phone }));
+            const unlockedMap = JSON.parse(localStorage.getItem('sikho_unlocked_courses') || '{}');
+            unlockedMap[`${phone}_${course.id}`] = coursePin;
+            localStorage.setItem('sikho_unlocked_courses', JSON.stringify(unlockedMap));
 
-    function clearAllCourses() {
-      if (confirm('क्या आप सभी सैंपल कोर्सेज हटाना चाहते हैं?')) {
-        courses = [];
-        localStorage.setItem('sd_owner_courses_v2', JSON.stringify(courses));
-        renderCourses();
-        renderAdminCourseList();
-      }
-    }
+            // Prepare WhatsApp messages
+            const ownerWa = window.SIKHO_CONFIG.whatsappNumber || '919876543210';
+            const studentMsg = encodeURIComponent(
+                `🎉 *SikhoDigital कोर्स अनलॉक पिन (OTP)*\n\nनमस्ते ${name},\nआपका कोर्स *${course.title}* सफलतापूर्वक वेरीफाई हो गया है!\n\n🔑 *आपका कोर्स पासवर्ड (PIN):* ${coursePin}\n_(नोट: यह पिन केवल इसी कोर्स में काम करेगा)_\n\n👥 *VIP WhatsApp ग्रुप:* ${course.whatsappGroup || ''}\n🧾 UTR: ${utr}`
+            );
 
-    // Export updated index.html with Owner's settings & courses permanently baked in
-    function downloadLockedHtmlFile() {
-      let fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-      const lockedBlock = `/*__LOCKED_CONFIG_START__*/\n    const DEFAULT_SETTINGS = ${JSON.stringify(settings, null, 6)};\n\n    const DEFAULT_COURSES = ${JSON.stringify(courses, null, 6)};\n    /*__LOCKED_CONFIG_END__*/`;
-      fullHtml = fullHtml.replace(/\/\*__LOCKED_CONFIG_START__\*\/[\s\S]*?\/\*__LOCKED_CONFIG_END__\*\//, lockedBlock);
+            // If referred by a friend, generate 50% OFF next-course coupon & bonus PDF link for the referrer!
+            let referrerRewardBox = '';
+            if (appliedReferrerPhone && appliedReferrerPhone.length === 10 && appliedReferrerPhone !== phone) {
+                const next50Code = `NEXT50-${appliedReferrerPhone.slice(-4)}${Math.floor(100 + Math.random() * 900)}`;
+                const refMsg = encodeURIComponent(
+                    `🎁 *बधाई हो! आपके दोस्त (${name}) ने आपके रेफरल से कोर्स जॉइन कर लिया है!*\n\n1️⃣ *आपका फ्री बोनस PDF लिंक:* ${window.SIKHO_CONFIG.bonusPdfUrl}\n2️⃣ *आपके अगले कोर्स पर 50% OFF का स्पेशल कूपन कोड:* *${next50Code}*\n\nSikhoDigital पर लॉगिन करके कभी भी इसका लाभ उठाएं!`
+                );
+                referrerRewardBox = `
+                <div class="p-3.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-left space-y-2">
+                    <div class="text-xs font-extrabold text-amber-300">🎁 रेफर करने वाले दोस्त (${appliedReferrerPhone}) का रिवॉर्ड तैयार है!</div>
+                    <p class="text-[11px] text-slate-300">नीचे क्लिक करके अपने दोस्त को WhatsApp पर उसका <strong>बोनस PDF लिंक</strong> और <strong>अगले कोर्स पर 50% OFF का कोड (${next50Code})</strong> तुरंत भेजें:</p>
+                    <a href="https://wa.me/91${appliedReferrerPhone}?text=${refMsg}" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-amber-500 text-slate-950 font-extrabold text-xs">
+                        <i class="fa-brands fa-whatsapp"></i> रेफरर दोस्त को बोनस PDF + 50% OFF कोड भेजें
+                    </a>
+                </div>`;
+            }
 
-      const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'index.html';
-      a.click();
-    }
+            document.getElementById('checkoutFormStep').classList.add('hidden');
+            const successBox = document.getElementById('checkoutSuccessStep');
+            successBox.classList.remove('hidden');
+            successBox.innerHTML = `
+                <div class="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h4 class="text-lg font-extrabold text-white">बधाई हो ${name}! आपका कोर्स पासवर्ड (PIN) तैयार है 🎉</h4>
+                <div class="bg-slate-950 border-2 border-emerald-500/60 rounded-xl p-4 space-y-1">
+                    <div class="text-xs text-slate-400">केवल <strong>${course.title}</strong> के लिए आपका अनलॉक पासवर्ड:</div>
+                    <div class="text-2xl font-mono font-extrabold text-amber-300 tracking-wider select-all">${coursePin}</div>
+                    <div class="text-[11px] text-emerald-400">✔️ यह कोर्स आपके स्टूडेंट पोर्टल में अनलॉक हो चुका है!</div>
+                </div>
+                <div class="space-y-2.5">
+                    <a href="https://wa.me/${ownerWa}?text=${studentMsg}" target="_blank" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-base"></i> स्टेप 1: WhatsApp पर अपना पिन और ग्रुप लिंक सेव करें
+                    </a>
+                    <a href="${course.whatsappGroup || '#'}" target="_blank" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-300 font-bold text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-users"></i> स्टेप 2: VIP WhatsApp ग्रुप में जुड़ें
+                    </a>
+                    <button onclick="closeCheckoutModal(); openStudentModal('${course.id}');" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold text-xs sm:text-sm">
+                        🎓 अभी कोर्स खोलें और सीखना शुरू करें <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+                ${referrerRewardBox}
+            `;
+        }
 
-    function renderAdminOrders() {
-      const box = document.getElementById('adminOrdersTable');
-      if (orders.length === 0) {
-        box.innerHTML = `<div class="text-slate-500">अभी तक कोई पेमेंट रिकॉर्ड नहीं है।</div>`;
-        return;
-      }
-      box.innerHTML = orders.map((o, idx) => `
-        <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <strong>${o.name}</strong> (${o.mobile}) • <span class="text-amber-300">${o.courseTitle}</span> • ₹${o.amount} • UTR: <span class="font-mono text-emerald-400">${o.utr}</span>
-          </div>
-          <button onclick="toggleOrderLock(${idx})" class="px-2.5 py-1 rounded text-[11px] font-bold ${o.locked ? 'bg-emerald-500 text-slate-950' : 'bg-red-500/20 text-red-300 border border-red-500/40'}">
-            ${o.locked ? 'अनलॉक करें' : 'लॉक करें (1-Year Block)'}
-          </button>
-        </div>
-      `).join('');
-    }
+        // Student Login & Course-Specific Password Verification Portal
+        function openStudentModal(autoOpenCourseId) {
+            document.getElementById('studentModal').classList.remove('hidden');
+            const stu = JSON.parse(localStorage.getItem('sikho_student_user') || 'null');
+            if (stu && stu.phone) {
+                showStudentDashboard(stu, autoOpenCourseId);
+            } else {
+                document.getElementById('studentLoginBox').classList.remove('hidden');
+                document.getElementById('studentDashboardBox').classList.add('hidden');
+            }
+        }
 
-    function toggleOrderLock(idx) {
-      orders[idx].locked = !orders[idx].locked;
-      localStorage.setItem('sd_orders', JSON.stringify(orders));
-      renderAdminOrders();
-    }
+        function closeStudentModal() {
+            document.getElementById('studentModal').classList.add('hidden');
+        }
 
-    function exportOrdersCsv() {
-      if (orders.length === 0) {
-        alert('डाउनलोड करने के लिए अभी कोई ऑर्डर नहीं है।');
-        return;
-      }
-      let csv = 'OrderID,Name,WhatsAppMobile,Email,Course,Amount,UTR,PurchaseDate,ExpiryDate,Locked\n';
-      orders.forEach(o => {
-        csv += `"${o.orderId}","${o.name}","${o.mobile}","${o.email}","${o.courseTitle}","${o.amount}","${o.utr}","${o.purchaseDate}","${o.expiryDate}","${o.locked}"\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'seekho-digital-payments.csv';
-      a.click();
-    }
+        function handleStudentLogin() {
+            const name = (document.getElementById('stuLoginName').value || '').trim();
+            const phone = (document.getElementById('stuLoginPhone').value || '').replace(/\D/g, '').slice(-10);
+            if (!name || phone.length !== 10) {
+                alert('कृपया अपना नाम और 10-अंकों का मोबाइल नंबर दर्ज करें।');
+                return;
+            }
+            const stu = { name, phone };
+            localStorage.setItem('sikho_student_user', JSON.stringify(stu));
+            showStudentDashboard(stu);
+        }
 
-    // Initialize App
-    applyBrandSettings();
-    renderCourses();
-    renderFreeVideos();
-  </script>
+        function studentLogout() {
+            localStorage.removeItem('sikho_student_user');
+            document.getElementById('studentLoginBox').classList.remove('hidden');
+            document.getElementById('studentDashboardBox').classList.add('hidden');
+            document.getElementById('headerLoginBtnText').textContent = 'स्टूडेंट लॉगिन / माय कोर्सेज';
+        }
+
+        function showStudentDashboard(stu, autoOpenCourseId) {
+            document.getElementById('studentLoginBox').classList.add('hidden');
+            document.getElementById('studentDashboardBox').classList.remove('hidden');
+            document.getElementById('stuWelcomeName').textContent = `नमस्ते, ${stu.name}!`;
+            document.getElementById('stuWelcomePhone').textContent = `WhatsApp: +91 ${stu.phone}`;
+            document.getElementById('headerLoginBtnText').textContent = `${stu.name.split(' ')[0]} (माय कोर्सेज)`;
+
+            const refCode = `REF-${stu.phone}`;
+            document.getElementById('stuRefCodeBadge').textContent = `कोड: ${refCode}`;
+            const baseUrl = window.location.origin + window.location.pathname;
+            document.getElementById('stuReferralLinkInput').value = `${baseUrl}?ref=${stu.phone}`;
+
+            if (autoOpenCourseId) {
+                const c = (window.SIKHO_CONFIG.courses || []).find(x => x.id === autoOpenCourseId);
+                if (c) activeStudentCategory = c.category;
+            }
+            switchStudentCategory(activeStudentCategory);
+            if (autoOpenCourseId) {
+                openUnlockedCourseLearning(autoOpenCourseId);
+            }
+        }
+
+        function copyReferralLink() {
+            const inp = document.getElementById('stuReferralLinkInput');
+            navigator.clipboard.writeText(inp.value);
+            alert('आपका रेफरल लिंक कॉपी हो गया है! इसे दोस्तों को भेजें—उन्हें 30% छूट मिलेगी और आपको अगले कोर्स पर 50% OFF कूपन + बोनस PDF!');
+        }
+
+        function shareReferralWhatsApp() {
+            const stu = JSON.parse(localStorage.getItem('sikho_student_user') || '{}');
+            const link = document.getElementById('stuReferralLinkInput').value;
+            const msg = encodeURIComponent(
+                `🔥 मैं *SikhoDigital Academy* से प्रैक्टिकल Video Courses और E-Books सीख रहा हूँ!\n\n🎁 मेरे स्पेशल रेफरल लिंक या कोड *REF-${stu.phone}* से जॉइन करने पर तुम्हें तुरंत *30% की एक्स्ट्रा छूट* मिलेगी:\n👉 ${link}`
+            );
+            window.open(`https://wa.me/?text=${msg}`, '_blank');
+        }
+
+        function switchStudentCategory(cat) {
+            activeStudentCategory = cat;
+            const courses = window.SIKHO_CONFIG.courses || [];
+            document.getElementById('stuCount-video').textContent = courses.filter(c => c.category === 'video').length;
+            document.getElementById('stuCount-ebook').textContent = courses.filter(c => c.category === 'ebook').length;
+
+            document.getElementById('stuTab-video').className = cat === 'video'
+                ? 'px-4 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm bg-rose-600 text-white shadow-lg'
+                : 'px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-slate-950 text-slate-400 border border-slate-800';
+            document.getElementById('stuTab-ebook').className = cat === 'ebook'
+                ? 'px-4 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm bg-emerald-600 text-white shadow-lg'
+                : 'px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-slate-950 text-slate-400 border border-slate-800';
+
+            renderStudentCourseCards();
+        }
+
+        function renderStudentCourseCards() {
+            const stu = JSON.parse(localStorage.getItem('sikho_student_user') || '{}');
+            const unlockedMap = JSON.parse(localStorage.getItem('sikho_unlocked_courses') || '{}');
+            const courses = (window.SIKHO_CONFIG.courses || []).filter(c => c.category === activeStudentCategory);
+
+            const container = document.getElementById('studentCoursesList');
+            container.innerHTML = courses.map(c => {
+                const expectedPin = generateCourseSpecificPin(stu.phone, c.id);
+                const isUnlocked = unlockedMap[`${stu.phone}_${c.id}`] === expectedPin;
+
+                return `
+                <div class="bg-slate-950 border ${isUnlocked ? 'border-emerald-500/60' : 'border-slate-800'} rounded-xl p-4 flex flex-col justify-between gap-3">
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1">
+                            <span class="font-mono font-bold text-indigo-400">${c.id} • ${c.category === 'ebook' ? '📚 E-Book (PDF)' : '🎬 Video Course'}</span>
+                            ${isUnlocked
+                                ? '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold"><i class="fa-solid fa-lock-open mr-1"></i>अनलॉक्ड</span>'
+                                : '<span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold"><i class="fa-solid fa-lock mr-1"></i>लॉक्ड (पिन आवश्यक)</span>'}
+                        </div>
+                        <h4 class="font-extrabold text-white text-sm sm:text-base">${c.title}</h4>
+                        <p class="text-xs text-slate-400 mt-1">${(c.modules || []).length} क्रमिक मॉड्यूल्स + 10 सवालों का सर्टिफिकेट क्विज़</p>
+                    </div>
+
+                    ${isUnlocked ? `
+                        <button onclick="openUnlockedCourseLearning('${c.id}')" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs">
+                            📖 कोर्स खोलें और पढ़ाई शुरू करें <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    ` : `
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="flex gap-2">
+                                <input id="pinInput_${c.id}" type="text" placeholder="कोर्स पिन डालें (जैसे ${c.id}-XXXXXX)" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white font-mono uppercase">
+                                <button onclick="verifyCoursePinAndUnlock('${c.id}')" class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shrink-0">
+                                    अनलॉक करें
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between text-[11px]">
+                                <span class="text-slate-400">कीमत: <strong class="text-emerald-400">₹${c.price}</strong></span>
+                                <button onclick="closeStudentModal(); openCheckoutModal('${c.id}');" class="text-amber-400 hover:underline font-bold">
+                                    अभी खरीदें और पिन पाएं →
+                                </button>
+                            </div>
+                        </div>
+                    `}
+                </div>`;
+            }).join('');
+        }
+
+        function verifyCoursePinAndUnlock(courseId) {
+            const stu = JSON.parse(localStorage.getItem('sikho_student_user') || '{}');
+            const entered = (document.getElementById(`pinInput_${courseId}`).value || '').trim().toUpperCase();
+            const expectedPin = generateCourseSpecificPin(stu.phone, courseId);
+
+            if (entered === expectedPin) {
+                const unlockedMap = JSON.parse(localStorage.getItem('sikho_unlocked_courses') || '{}');
+                unlockedMap[`${stu.phone}_${courseId}`] = expectedPin;
+                localStorage.setItem('sikho_unlocked_courses', JSON.stringify(unlockedMap));
+                renderStudentCourseCards();
+                openUnlockedCourseLearning(courseId);
+            } else {
+                alert(`❌ गलत पासवर्ड (PIN)! यह पासवर्ड इस कोर्स (${courseId}) के लिए मान्य नहीं है। जिस कोर्स के लिए आपने पेमेंट किया है, उसका पिन केवल उसी कोर्स में काम करेगा।`);
+            }
+        }
+
+        // Sequential Module Viewer + 10-Question Certification Quiz
+        function openUnlockedCourseLearning(courseId) {
+            const stu = JSON.parse(localStorage.getItem('sikho_student_user') || '{}');
+            const course = (window.SIKHO_CONFIG.courses || []).find(c => c.id === courseId);
+            if (!course) return;
+
+            const progKey = `sikho_prog_${stu.phone}_${courseId}`;
+            const completedIdx = Number(localStorage.getItem(progKey) || '0');
+            const modules = course.modules || [];
+            const allDone = completedIdx >= modules.length;
+
+            const area = document.getElementById('activeCourseLearningArea');
+            area.classList.remove('hidden');
+
+            const modulesHtml = modules.map((m, idx) => {
+                const isDone = idx < completedIdx;
+                const isCurrent = idx === completedIdx;
+                const isLocked = idx > completedIdx;
+
+                return `
+                <div class="p-4 rounded-xl border ${isDone ? 'bg-emerald-950/20 border-emerald-500/40' : isCurrent ? 'bg-slate-900 border-indigo-500' : 'bg-slate-900/40 border-slate-800 opacity-60'} space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-xs sm:text-sm text-white">पेज ${idx + 1}: ${m.title}</span>
+                        ${isDone ? '<span class="text-xs font-bold text-emerald-400">✔️ पूरा हुआ</span>' : isCurrent ? '<span class="text-xs font-bold text-amber-300">⏳ अभी पढ़ें/देखें</span>' : '<span class="text-xs text-slate-500"><i class="fa-solid fa-lock"></i> पिछला पेज पूरा करें</span>'}
+                    </div>
+                    ${(isDone || isCurrent) ? `
+                        <p class="text-xs text-slate-300">${m.notes || ''}</p>
+                        <div class="flex flex-wrap items-center gap-2 pt-1">
+                            <a href="${m.contentUrl || '#'}" target="_blank" class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs inline-flex items-center gap-1.5">
+                                <i class="fa-solid ${course.category === 'ebook' ? 'fa-file-pdf' : 'fa-circle-play'}"></i>
+                                ${course.category === 'ebook' ? 'PDF अध्याय खोलें' : 'वीडियो लेसन देखें'}
+                            </a>
+                            ${isCurrent ? `
+                                <button onclick="markModuleStepComplete('${course.id}', ${idx + 1})" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs">
+                                    ✔️ यह पेज पूरा हुआ (अगला पेज खोलें)
+                                </button>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+                </div>`;
+            }).join('');
+
+            area.innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                    <div>
+                        <span class="text-xs font-bold text-indigo-400">${course.category === 'ebook' ? '📚 E-Book (PDF)' : '🎬 Video Course'} लर्निंग रूम</span>
+                        <h4 class="text-lg font-extrabold text-white">${course.title}</h4>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold">
+                        प्रगति: ${Math.min(completedIdx, modules.length)} / ${modules.length} पेज पूरे
+                    </span>
+                </div>
+                <div class="space-y-3">${modulesHtml}</div>
+
+                <!-- Certification Quiz Gate (Unlocks ONLY after 100% modules completed) -->
+                <div class="p-4 rounded-xl border ${allDone ? 'bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border-amber-400' : 'bg-slate-900 border-slate-800'}">
+                    ${allDone ? `
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h5 class="font-extrabold text-amber-300 text-sm sm:text-base">🏆 बधाई हो! आपके सभी पेज पूरे हो गए हैं — सर्टिफिकेट सेक्शन खुल गया है!</h5>
+                                <p class="text-xs text-slate-300">अब 10 सवालों का छोटा क्विज़ पूरा करें और अपना वेरीफाइड सर्टिफिकेट डाउनलोड व WhatsApp पर प्राप्त करें।</p>
+                            </div>
+                            <button onclick="startCertificationQuiz('${course.id}')" class="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm shrink-0 shadow-lg">
+                                📝 10 सवालों का क्विज़ शुरू करें
+                            </button>
+                        </div>
+                        <div id="quizContainer_${course.id}" class="hidden mt-4 pt-4 border-t border-slate-800"></div>
+                    ` : `
+                        <div class="flex items-center gap-3 text-xs text-slate-400">
+                            <i class="fa-solid fa-lock text-lg text-amber-400"></i>
+                            <span><strong>सर्टिफिकेशन सेक्शन लॉक्ड है:</strong> ऊपर दिए गए सभी ${modules.length} पेज क्रमिक रूप से (Step-by-Step) पूरे करने के बाद ही 10 सवालों का क्विज़ और सर्टिफिकेट खुलेगा।</span>
+                        </div>
+                    `}
+                </div>
+            `;
+            area.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function markModuleStepComplete(courseId, nextCount) {
+            const stu = JSON.parse(localStorage.getItem('sikho_student_user') || '{}');
+            localStorage.setItem(`sikho_prog_${stu.phone}_${courseId}`, String(nextCount));
+            openUnlockedCourseLearning(courseId);
+        }
+
+        const QUIZ_QUESTIONS = [
+            { q: "1. डिजिटल स्किल्स और AI टूल्स का सबसे बड़ा फायदा क्या है?", opts: ["समय की बचत और 10x प्रोडक्टिविटी", "काम धीमा होना", "केवल मनोरंजन"], ans: 0 },
+            { q: "2. किसी भी ऑनलाइन कोर्स या ई-बुक से अधिकतम लाभ कैसे मिलता है?", opts: ["केवल खरीद कर छोड़ देने से", "हर मॉड्यूल को स्टेप-बाय-स्टेप प्रैक्टिकल लागू करने से", "बिना पढ़े"], ans: 1 },
+            { q: "3. हाई-कन्वर्टिंग कंटेंट या वीडियो में शुरुआती 3 सेकंड क्यों महत्वपूर्ण हैं?", opts: ["दर्शक का ध्यान (Hook) पकड़ने के लिए", "कोई महत्व नहीं है", "वीडियो बंद करने के लिए"], ans: 0 },
+            { q: "4. ChatGPT या AI से बेहतरीन रिज़ल्ट पाने के लिए क्या ज़रूरी है?", opts: ["स्पष्ट और विस्तृत प्रॉम्प्ट (Context + Goal) देना", "एक शब्द लिखना", "कुछ न लिखना"], ans: 0 },
+            { q: "5. WhatsApp और डिजिटल मार्केटिंग में कस्टमर ट्रस्ट कैसे बनता है?", opts: ["स्पैम मैसेज से", "सही वैल्यू, तुरंत सपोर्ट और स्पष्ट ऑफर से", "गलत जानकारी से"], ans: 1 },
+            { q: "6. ऑनलाइन बिज़नेस में रेफरल सिस्टम क्यों फायदेमंद होता है?", opts: ["दोस्त और रेफरर दोनों को डिस्काउंट व बोनस मिलता है", "किसी को फायदा नहीं", "नुकसान होता है"], ans: 0 },
+            { q: "7. सोशल मीडिया पर लगातार ग्रोथ के लिए क्या आवश्यक है?", opts: ["साल में 1 पोस्ट", "क्वालिटी कंटेंट + निरंतरता (Consistency)", "बिना ऑडियो वीडियो"], ans: 1 },
+            { q: "8. ई-बुक (PDF) नोट्स और चेकलिस्ट का उपयोग कैसे करना चाहिए?", opts: ["रोज़ाना के काम में रेफरेंस गाइड की तरह", "डिलीट कर देना चाहिए", "कभी नहीं खोलना चाहिए"], ans: 0 },
+            { q: "9. फ्रीलांसिंग या डिजिटल सर्विस बेचते समय क्लाइंट क्या देखता है?", opts: ["आपका पोर्टफोलियो और समस्या सुलझाने की क्षमता", "केवल बहाने", "कुछ नहीं"], ans: 0 },
+            { q: "10. इस कोर्स को पूरा करने के बाद आपका अगला कदम क्या होना चाहिए?", opts: ["सीखे हुए ज्ञान को तुरंत प्रैक्टिकल प्रोजेक्ट में लागू करना", "भूल जाना", "कुछ न करना"], ans: 0 }
+        ];
+
+        function startCertificationQuiz(courseId) {
+            const box = document.getElementById(`quizContainer_${courseId}`);
+            box.classList.remove('hidden');
+            box.innerHTML = `
+                <div class="space-y-4">
+                    <h5 class="font-bold text-white text-sm">📝 सर्टिफिकेशन क्विज़ (सभी 10 सवालों के सही उत्तर चुनें):</h5>
+                    ${QUIZ_QUESTIONS.map((item, i) => `
+                        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                            <div class="text-xs font-bold text-slate-200">${item.q}</div>
+                            <div class="grid sm:grid-cols-3 gap-2">
+                                ${item.opts.map((opt, oi) => `
+                                    <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-950 border border-slate-800 text-xs cursor-pointer hover:border-indigo-500">
+                                        <input type="radio" name="q_${courseId}_${i}" value="${oi}" ${oi === item.ans ? 'checked' : ''}>
+                                        <span>${opt}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                    <button onclick="submitQuizAndDownloadCertificate('${courseId}')" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-extrabold text-sm shadow-lg">
+                        🎓 क्विज़ सबमिट करें और ऑटोमैटिक सर्टिफिकेट डाउनलोड + WhatsApp पर भेजें
+                    </button>
+                </div>
+            `;
+        }
+
+        function submitQuizAndDownloadCertificate(courseId) {
+            const stu = JSON.parse(localStorage.getItem('sikho_student_user') || '{}');
+            const course = (window.SIKHO_CONFIG.courses || []).find(c => c.id === courseId);
+            let score = 0;
+            QUIZ_QUESTIONS.forEach((item, i) => {
+                const sel = document.querySelector(`input[name="q_${courseId}_${i}"]:checked`);
+                if (sel && Number(sel.value) === item.ans) score++;
+            });
+            const percent = Math.round((score / QUIZ_QUESTIONS.length) * 100);
+
+            // Generate High-Resolution PNG Certificate via HTML5 Canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = 1200;
+            canvas.height = 850;
+            const ctx = canvas.getContext('2d');
+
+            // Background & Golden Border
+            const grad = ctx.createLinearGradient(0, 0, 1200, 850);
+            grad.addColorStop(0, '#0f172a');
+            grad.addColorStop(1, '#1e1b4b');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 1200, 850);
+
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(35, 35, 1130, 780);
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(52, 52, 1096, 746);
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = 'bold 28px Poppins, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('SIKHODIGITAL ACADEMY • VERIFIED CERTIFICATION', 600, 140);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 54px Poppins, sans-serif';
+            ctx.fillText('CERTIFICATE OF COMPLETION', 600, 220);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '24px sans-serif';
+            ctx.fillText('This is proudly presented to', 600, 300);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 52px Poppins, sans-serif';
+            ctx.fillText(stu.name || 'Student', 600, 380);
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '24px sans-serif';
+            ctx.fillText(`for successfully completing all modules & passing the certification quiz (${score}/10 • ${percent}%) in`, 600, 450);
+
+            ctx.fillStyle = '#facc15';
+            ctx.font = 'bold 38px Poppins, sans-serif';
+            ctx.fillText(course.title, 600, 525);
+
+            const certId = `CERT-${course.id}-${stu.phone.slice(-4)}`;
+            const dateStr = new Date().toLocaleDateString('hi-IN');
+            ctx.fillStyle = '#e2e8f0';
+            ctx.font = '22px monospace';
+            ctx.fillText(`Certificate ID: ${certId}   |   Date: ${dateStr}   |   Score: ${percent}%`, 600, 640);
+
+            ctx.fillStyle = '#10b981';
+            ctx.font = 'bold 24px sans-serif';
+            ctx.fillText('Authorized by SikhoDigital Academy (Krishna Chandrakar)', 600, 725);
+
+            const dataUrl = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = `SikhoDigital-Certificate-${course.id}.png`;
+            a.click();
+
+            const waMsg = encodeURIComponent(
+                `🏆 *SikhoDigital Verified Certificate*\n\nनमस्ते! मैंने *${course.title}* के सभी मॉड्यूल पूरे करके क्विज़ में *${score}/10 (${percent}%)* स्कोर प्राप्त किया है!\n🎓 Certificate ID: *${certId}*`
+            );
+            window.open(`https://wa.me/${window.SIKHO_CONFIG.whatsappNumber}?text=${waMsg}`, '_blank');
+        }
+
+        // PROTECTED ADMIN CONTROL CENTER FUNCTIONS (Only accessible via Footer Lock Icon + Password)
+        function promptAdminLogin() {
+            const pass = prompt('🔒 एडमिन पासवर्ड दर्ज करें (सिर्फ ओनर के लिए):');
+            if (!pass) return;
+            if (pass === (window.SIKHO_CONFIG.adminPass || 'krishna@2026')) {
+                openAdminModal();
+            } else {
+                alert('❌ गलत पासवर्ड! यह सेक्शन केवल वेबसाइट ओनर के लिए सुरक्षित है।');
+            }
+        }
+
+        function openAdminModal() {
+            document.getElementById('cfgWhatsapp').value = window.SIKHO_CONFIG.whatsappNumber || '';
+            document.getElementById('cfgUpi').value = window.SIKHO_CONFIG.upiId || '';
+            document.getElementById('cfgBonusUrl').value = window.SIKHO_CONFIG.bonusPdfUrl || '';
+            resetAdminCourseForm();
+            renderAdminCourseList();
+            document.getElementById('adminModal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function calcAdminPrice(source) {
+            const mrp = Number(document.getElementById('admMrp').value) || 0;
+            let disc = Number(document.getElementById('admDiscount').value) || 0;
+            let price = Number(document.getElementById('admPrice').value) || 0;
+
+            if (source === 'mrp' || source === 'percent') {
+                disc = Math.min(100, Math.max(0, disc));
+                price = Math.round(mrp * (100 - disc) / 100);
+                document.getElementById('admPrice').value = price;
+            } else if (source === 'price' && mrp > 0) {
+                disc = Math.round(((mrp - price) / mrp) * 100);
+                document.getElementById('admDiscount').value = Math.min(100, Math.max(0, disc));
+            }
+        }
+
+        function setQuickDiscount(pct) {
+            document.getElementById('admDiscount').value = pct;
+            calcAdminPrice('percent');
+            if (pct === 99) document.getElementById('admBadge').value = '99% OFF SPECIAL';
+            if (pct === 100) document.getElementById('admBadge').value = '100% FREE COURSE';
+        }
+
+        function handleAdminImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxW = 480;
+                    const scale = Math.min(1, maxW / img.width);
+                    canvas.width = Math.round(img.width * scale);
+                    canvas.height = Math.round(img.height * scale);
+                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                    document.getElementById('admCoverUrl').value = canvas.toDataURL('image/jpeg', 0.8);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addAdminModuleRow(title = '', contentUrl = '', notes = '') {
+            const container = document.getElementById('admModulesContainer');
+            const div = document.createElement('div');
+            div.className = 'adm-mod-row grid sm:grid-cols-12 gap-1.5 bg-slate-950 p-2 rounded-lg border border-slate-800';
+            div.innerHTML = `
+                <input type="text" placeholder="मॉड्यूल/अध्याय का नाम" value="${title}" class="mod-title sm:col-span-4 px-2 py-1.5 rounded bg-slate-900 border border-slate-800 text-xs text-white">
+                <input type="text" placeholder="Video या PDF लिंक (URL)" value="${contentUrl}" class="mod-url sm:col-span-4 px-2 py-1.5 rounded bg-slate-900 border border-slate-800 text-xs text-white">
+                <input type="text" placeholder="शॉर्ट नोट्स" value="${notes}" class="mod-notes sm:col-span-3 px-2 py-1.5 rounded bg-slate-900 border border-slate-800 text-xs text-white">
+                <button type="button" onclick="this.parentElement.remove()" class="sm:col-span-1 bg-rose-950 text-rose-300 rounded text-xs font-bold">✕</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function resetAdminCourseForm() {
+            document.getElementById('admEditId').value = '';
+            document.getElementById('adminFormHeading').textContent = '➕ नया Video Course या E-Book (PDF) जोड़ें';
+            document.getElementById('admTitle').value = '';
+            document.getElementById('admCategory').value = 'video';
+            document.getElementById('admMrp').value = 999;
+            document.getElementById('admDiscount').value = 80;
+            document.getElementById('admPrice').value = 199;
+            document.getElementById('admGst').value = 'none';
+            document.getElementById('admCoverUrl').value = '';
+            document.getElementById('admDuration').value = '';
+            document.getElementById('admBadge').value = 'PREMIUM';
+            document.getElementById('admWaGroup').value = '';
+            document.getElementById('admDesc').value = '';
+            document.getElementById('admHighlights').value = 'स्टेप-बाय-स्टेप गाइड, प्रैक्टिकल टेम्पलेट्स, वेरीफाइड सर्टिफिकेट';
+            document.getElementById('admModulesContainer').innerHTML = '';
+            addAdminModuleRow('मॉड्यूल 1: शुरुआती गाइड और सेटअप', 'https://', 'पहला अध्याय पूरा करें');
+            addAdminModuleRow('मॉड्यूल 2: एडवांस प्रैक्टिकल सिस्टम', 'https://', 'दूसरा अध्याय पूरा करें');
+        }
+
+        function saveAdminCourse() {
+            const title = (document.getElementById('admTitle').value || '').trim();
+            if (!title) {
+                alert('कृपया कोर्स या ई-बुक का नाम लिखें।');
+                return;
+            }
+            const editId = document.getElementById('admEditId').value;
+            const category = document.getElementById('admCategory').value;
+            const mrp = Number(document.getElementById('admMrp').value) || 0;
+            const discountPercent = Number(document.getElementById('admDiscount').value) || 0;
+            const price = Number(document.getElementById('admPrice').value) || 0;
+            const gstMode = document.getElementById('admGst').value;
+            const coverImage = (document.getElementById('admCoverUrl').value || '').trim();
+            const duration = (document.getElementById('admDuration').value || '').trim() || (category === 'ebook' ? '120 Pages PDF' : '10+ घंटे HD Video');
+            const badge = (document.getElementById('admBadge').value || '').trim() || 'PREMIUM';
+            const whatsappGroup = (document.getElementById('admWaGroup').value || '').trim();
+            const description = (document.getElementById('admDesc').value || '').trim();
+            const highlights = (document.getElementById('admHighlights').value || '').split(',').map(s => s.trim()).filter(Boolean);
+
+            const modules = [];
+            document.querySelectorAll('#admModulesContainer .adm-mod-row').forEach(row => {
+                const mTitle = row.querySelector('.mod-title').value.trim();
+                const mUrl = row.querySelector('.mod-url').value.trim();
+                const mNotes = row.querySelector('.mod-notes').value.trim();
+                if (mTitle) modules.push({ title: mTitle, type: category === 'ebook' ? 'pdf' : 'video', contentUrl: mUrl, notes: mNotes });
+            });
+
+            const courses = window.SIKHO_CONFIG.courses || [];
+            if (editId) {
+                const idx = courses.findIndex(c => c.id === editId);
+                if (idx > -1) {
+                    courses[idx] = { ...courses[idx], title, category, mrp, discountPercent, price, gstMode, coverImage, duration, badge, whatsappGroup, description, highlights, modules };
+                }
+            } else {
+                const newId = 'SD' + Math.floor(100 + Math.random() * 899);
+                const coverColor = category === 'ebook' ? 'from-emerald-600 via-teal-700 to-cyan-800' : 'from-indigo-600 via-purple-600 to-pink-600';
+                courses.unshift({ id: newId, title, category, mrp, discountPercent, price, gstMode, coverImage, coverColor, duration, badge, whatsappGroup, description, highlights, modules });
+            }
+
+            saveConfig();
+            renderCatalog();
+            renderAdminCourseList();
+            resetAdminCourseForm();
+            alert('✅ कोर्स सफलतापूर्वक सेव हो गया! अब ऊपर हरे बटन "नया अपडेटेड index.html डाउनलोड करें" पर क्लिक करके GitHub के लिए फाइल डाउनलोड कर सकते हैं।');
+        }
+
+        function editAdminCourse(id) {
+            const c = (window.SIKHO_CONFIG.courses || []).find(x => x.id === id);
+            if (!c) return;
+            document.getElementById('admEditId').value = c.id;
+            document.getElementById('adminFormHeading').textContent = `✏️ एडिट करें: ${c.title} (${c.id})`;
+            document.getElementById('admTitle').value = c.title;
+            document.getElementById('admCategory').value = c.category || 'video';
+            document.getElementById('admMrp').value = c.mrp;
+            document.getElementById('admDiscount').value = c.discountPercent;
+            document.getElementById('admPrice').value = c.price;
+            document.getElementById('admGst').value = c.gstMode || 'none';
+            document.getElementById('admCoverUrl').value = c.coverImage || '';
+            document.getElementById('admDuration').value = c.duration || '';
+            document.getElementById('admBadge').value = c.badge || '';
+            document.getElementById('admWaGroup').value = c.whatsappGroup || '';
+            document.getElementById('admDesc').value = c.description || '';
+            document.getElementById('admHighlights').value = (c.highlights || []).join(', ');
+
+            document.getElementById('admModulesContainer').innerHTML = '';
+            (c.modules || []).forEach(m => addAdminModuleRow(m.title, m.contentUrl, m.notes));
+        }
+
+        function deleteAdminCourse(id) {
+            if (!confirm('क्या आप वाकई इस कोर्स को हटाना चाहते हैं?')) return;
+            window.SIKHO_CONFIG.courses = (window.SIKHO_CONFIG.courses || []).filter(c => c.id !== id);
+            saveConfig();
+            renderCatalog();
+            renderAdminCourseList();
+        }
+
+        function renderAdminCourseList() {
+            const courses = window.SIKHO_CONFIG.courses || [];
+            document.getElementById('adminTotalCount').textContent = courses.length;
+
+            const sel = document.getElementById('pinGenCourse');
+            sel.innerHTML = courses.map(c => `<option value="${c.id}">${c.id} - ${c.title}</option>`).join('');
+
+            document.getElementById('adminCourseList').innerHTML = courses.map(c => `
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-2">
+                    <div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded ${c.category === 'ebook' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'}">
+                            ${c.category === 'ebook' ? '📚 E-Book (PDF)' : '🎬 Video Course'} • ${c.id}
+                        </span>
+                        <div class="font-bold text-white text-xs mt-1">${c.title}</div>
+                        <div class="text-[11px] text-slate-400">MRP: ₹${c.mrp} | <strong class="text-amber-300">${c.discountPercent}% OFF</strong> | Final: <strong class="text-emerald-400">₹${c.price}</strong></div>
+                    </div>
+                    <div class="flex gap-1.5 shrink-0">
+                        <button onclick="editAdminCourse('${c.id}')" class="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">एडिट</button>
+                        <button onclick="deleteAdminCourse('${c.id}')" class="px-2.5 py-1.5 rounded-lg bg-rose-950 hover:bg-rose-800 text-rose-300 text-xs font-bold">हटाएं</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveGlobalSettings() {
+            window.SIKHO_CONFIG.whatsappNumber = (document.getElementById('cfgWhatsapp').value || '').trim();
+            window.SIKHO_CONFIG.upiId = (document.getElementById('cfgUpi').value || '').trim();
+            window.SIKHO_CONFIG.bonusPdfUrl = (document.getElementById('cfgBonusUrl').value || '').trim();
+            saveConfig();
+            alert('✅ आपकी WhatsApp, UPI और बोनस PDF सेटिंग्स सेव हो गईं!');
+        }
+
+        function adminGenerateStudentPin() {
+            const phone = (document.getElementById('pinGenPhone').value || '').replace(/\D/g, '').slice(-10);
+            const courseId = document.getElementById('pinGenCourse').value;
+            if (phone.length !== 10 || !courseId) {
+                alert('कृपया स्टूडेंट का 10-अंकों का मोबाइल नंबर और कोर्स चुनें।');
+                return;
+            }
+            const pin = generateCourseSpecificPin(phone, courseId);
+            const course = (window.SIKHO_CONFIG.courses || []).find(c => c.id === courseId);
+            const msg = encodeURIComponent(
+                `🔑 *SikhoDigital कोर्स अनलॉक पासवर्ड (PIN)*\n\nकोर्स: *${course ? course.title : courseId}*\nआपका लॉगिन मोबाइल: *${phone}*\nआपका स्पेशल पिन: *${pin}*\n\nवेबसाइट पर Student Login में जाकर यह पिन डालें, आपका कोर्स तुरंत खुल जाएगा!`
+            );
+            const res = document.getElementById('pinGenResult');
+            res.classList.remove('hidden');
+            res.innerHTML = `
+                <div class="font-mono font-extrabold text-amber-300 text-sm mb-1">PIN: ${pin}</div>
+                <a href="https://wa.me/91${phone}?text=${msg}" target="_blank" class="inline-block px-3 py-1 rounded bg-emerald-600 text-white font-bold">
+                    <i class="fa-brands fa-whatsapp"></i> स्टूडेंट को WhatsApp पर भेजें
+                </a>
+            `;
+        }
+
+        // 1-CLICK SELF-UPDATING index.html DOWNLOADER FOR GITHUB
+        function downloadUpdatedHtmlFile() {
+            saveConfig();
+            const cloneDoc = document.documentElement.cloneNode(true);
+            // Reset modal states in exported HTML so visitors see clean homepage
+            const modals = ['studentModal', 'checkoutModal', 'adminModal'];
+            modals.forEach(id => {
+                const el = cloneDoc.querySelector('#' + id);
+                if (el) el.classList.add('hidden');
+            });
+            // Inject updated courses & config directly into #sikho-embedded-data
+            const dataScript = cloneDoc.querySelector('#sikho-embedded-data');
+            if (dataScript) {
+                dataScript.textContent = `\nwindow.SIKHO_CONFIG = ${JSON.stringify(window.SIKHO_CONFIG, null, 4)};\n`;
+            }
+            const finalHtml = '<!DOCTYPE html>\n' + cloneDoc.outerHTML;
+            const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadConfig();
+            switchCatalogCategory('video');
+            const stu = JSON.parse(localStorage.getItem('sikho_student_user') || 'null');
+            if (stu && stu.name) {
+                document.getElementById('headerLoginBtnText').textContent = `${stu.name.split(' ')[0]} (माय कोर्सेज)`;
+            }
+        });
+    </script>
 </body>
 </html>
